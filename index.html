@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NewsApp România</title>
+    <title>NewsApp România - LIVE</title>
     
     <!-- PWA Meta Tags -->
-    <meta name="description" content="Știri din România">
+    <meta name="description" content="Știri LIVE din România - Actualizare automată">
     <meta name="theme-color" content="#ff6200">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -75,6 +75,22 @@
             color: #1a1a1a;
         }
 
+        .live-indicator {
+            background: #ff6200;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
         .search-container {
             flex: 1;
             max-width: 500px;
@@ -126,6 +142,8 @@
 
         .refresh-btn.loading {
             animation: spin 1s linear infinite;
+            border-color: #ff6200;
+            color: #ff6200;
         }
 
         @keyframes spin {
@@ -149,11 +167,38 @@
             padding: 1rem 1.5rem;
             margin-bottom: 2rem;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .status-text {
             color: #4a4a4a;
             font-weight: 500;
+        }
+
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .api-status.online {
+            color: #22c55e;
+        }
+
+        .api-status.offline {
+            color: #ef4444;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse 2s ease-in-out infinite;
         }
 
         /* Stats */
@@ -263,6 +308,27 @@
             justify-content: center;
             color: #8a8a8a;
             font-size: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .news-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .fresh-badge {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: #22c55e;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
         }
 
         .news-content {
@@ -285,6 +351,10 @@
             letter-spacing: 0.5px;
         }
 
+        .news-time {
+            font-weight: 500;
+        }
+
         .news-title {
             font-size: 1.25rem;
             font-weight: 600;
@@ -297,6 +367,10 @@
             color: #4a4a4a;
             line-height: 1.5;
             margin-bottom: 1.25rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         .news-actions {
@@ -351,13 +425,56 @@
         }
 
         .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #e0e0e0;
-            border-top: 3px solid #ff6200;
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e0e0e0;
+            border-top: 4px solid #ff6200;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 1.5rem;
+        }
+
+        /* Error State */
+        .error-container {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            margin: 2rem 0;
+        }
+
+        .error-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #ef4444;
+        }
+
+        .error-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        .error-text {
+            color: #8a8a8a;
+            margin-bottom: 1.5rem;
+        }
+
+        .retry-btn {
+            background: #ff6200;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .retry-btn:hover {
+            background: #e55100;
         }
 
         /* Responsive */
@@ -386,6 +503,12 @@
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
             }
+
+            .status-bar {
+                flex-direction: column;
+                gap: 0.75rem;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -396,6 +519,7 @@
             <div class="logo">
                 <div class="logo-mark">N</div>
                 <div class="logo-text">NewsApp</div>
+                <div class="live-indicator">🔴 LIVE</div>
             </div>
             
             <div class="search-container">
@@ -414,18 +538,22 @@
         <!-- Status Bar -->
         <div class="status-bar">
             <div class="status-text">
-                <strong>✅ Aplicația funcționează</strong> - Știri din România actualizate
+                <strong>📡 Știri LIVE</strong> - Actualizare automată din surse verificate
+            </div>
+            <div class="api-status" id="apiStatus">
+                <div class="status-dot"></div>
+                <span id="statusText">Conectare...</span>
             </div>
         </div>
 
         <!-- Stats Grid -->
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-number" id="totalNews">12</div>
-                <div class="stat-label">Știri Totale</div>
+                <div class="stat-number" id="totalNews">0</div>
+                <div class="stat-label">Știri LIVE</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="filteredNews">12</div>
+                <div class="stat-number" id="filteredNews">0</div>
                 <div class="stat-label">Afișate</div>
             </div>
             <div class="stat-card">
@@ -433,163 +561,294 @@
                 <div class="stat-label">Salvate</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="lastUpdate">16:45</div>
+                <div class="stat-number" id="lastUpdate">--:--</div>
                 <div class="stat-label">Actualizat</div>
             </div>
         </div>
 
         <!-- Navigation Tabs -->
         <nav class="nav-tabs">
-            <div class="tabs-list">
+            <div class="tabs-list" id="tabsList">
                 <button class="tab-item active" onclick="filterNews('toate')">📰 Toate</button>
-                <button class="tab-item" onclick="filterNews('breaking')">🚨 Breaking</button>
-                <button class="tab-item" onclick="filterNews('politica')">🏛️ Politică</button>
-                <button class="tab-item" onclick="filterNews('economie')">💼 Economie</button>
-                <button class="tab-item" onclick="filterNews('social')">👥 Social</button>
-                <button class="tab-item" onclick="filterNews('sport')">⚽ Sport</button>
+                <button class="tab-item" onclick="filterNews('digi24')">📺 Digi24</button>
+                <button class="tab-item" onclick="filterNews('protv')">📺 ProTV</button>
+                <button class="tab-item" onclick="filterNews('hotnews')">🔥 HotNews</button>
+                <button class="tab-item" onclick="filterNews('adevarul')">📰 Adevărul</button>
             </div>
         </nav>
 
-        <!-- News Grid -->
-        <div class="news-grid" id="newsGrid">
-            <!-- News cards will be inserted here -->
+        <!-- Loading State -->
+        <div class="loading-container" id="loadingState" style="display: none;">
+            <div class="loading-spinner"></div>
+            <h3>Se încarcă știrile LIVE...</h3>
+            <p>Obținem cele mai recente știri din România</p>
         </div>
+
+        <!-- Error State -->
+        <div class="error-container" id="errorState" style="display: none;">
+            <div class="error-icon">⚠️</div>
+            <h3 class="error-title">Nu s-au putut încărca știrile</h3>
+            <p class="error-text">Verifică conexiunea la internet și încearcă din nou</p>
+            <button class="retry-btn" onclick="loadNews()">Încearcă din nou</button>
+        </div>
+
+        <!-- News Grid -->
+        <div class="news-grid" id="newsGrid"></div>
     </main>
 
     <script>
-        // Simple news data that loads immediately
-        const newsData = [
+        // RSS Sources for Romanian news
+        const RSS_SOURCES = [
             {
-                id: 1,
-                title: "Alertă meteorologică: Cod portocaliu de furtuni în 12 județe",
-                description: "ANM a emis avertizări de cod portocaliu pentru fenomene meteo severe. Sunt așteptate ploi torențiale, descărcări electrice și grindină.",
-                category: 'breaking',
-                source: 'ANM România',
-                time: '15 min',
-                url: 'https://anm.ro'
+                id: 'digi24',
+                name: 'Digi24',
+                rss: 'https://www.digi24.ro/rss',
+                website: 'https://www.digi24.ro'
             },
             {
-                id: 2,
-                title: "Parlamentul adoptă noi reglementări pentru digitalizarea administrației",
-                description: "Camera Deputaților a votat în favoarea legii care accelerează procesul de digitalizare a serviciilor publice.",
-                category: 'politica',
-                source: 'Parlamentul României',
-                time: '1 h',
-                url: '#'
+                id: 'protv',
+                name: 'ProTV',
+                rss: 'https://stirileprotv.ro/rss',
+                website: 'https://stirileprotv.ro'
             },
             {
-                id: 3,
-                title: "PIB-ul României crește cu 4.2% în primul trimestru",
-                description: "INS raportează o creștere economică susținută, impulsionată de sectoarele IT, automotive și agricultura.",
-                category: 'economie',
-                source: 'INS România',
-                time: '2 h',
-                url: '#'
+                id: 'hotnews',
+                name: 'HotNews',
+                rss: 'https://www.hotnews.ro/rss',
+                website: 'https://www.hotnews.ro'
             },
             {
-                id: 4,
-                title: "Campanie națională de vaccinare antigripală pentru persoanele vulnerabile",
-                description: "Ministerul Sănătății lansează programul de imunizare pentru sezonul rece, prioritizând persoanele cu vârsta peste 65 de ani.",
-                category: 'social',
-                source: 'Ministerul Sănătății',
-                time: '3 h',
-                url: '#'
-            },
-            {
-                id: 5,
-                title: "România lansează primul satelit de observare a Pământului",
-                description: "Agenția Spațială Română a lansat cu succes primul satelit național destinat monitorizării mediului și agriculturii.",
-                category: 'tehnologie',
-                source: 'ROSA',
-                time: '4 h',
-                url: '#'
-            },
-            {
-                id: 6,
-                title: "Echipa națională de fotbal câștigă meciul decisiv din preliminarii",
-                description: "România învinge cu 2-1 și se califică la turneul final. Golurile au fost marcate în repriza secundă.",
-                category: 'sport',
-                source: 'FRF',
-                time: '5 h',
-                url: '#'
-            },
-            {
-                id: 7,
-                title: "Investiție de 500 milioane euro în parcul industrial din Argeș",
-                description: "O companie multinațională anunță construirea unei noi fabrici de componente auto în România, creând 2.000 de locuri de muncă.",
-                category: 'economie',
-                source: 'Ministerul Economiei',
-                time: '6 h',
-                url: '#'
-            },
-            {
-                id: 8,
-                title: "Start-up românesc dezvoltă soluții AI pentru medicină",
-                description: "O echipă de cercetători din Cluj-Napoca creează algoritmi de inteligență artificială pentru diagnosticarea precoce a cancerului.",
-                category: 'tehnologie',
-                source: 'TechHub România',
-                time: '7 h',
-                url: '#'
-            },
-            {
-                id: 9,
-                title: "Începe noul an școlar: 2.8 milioane de elevi se întorc la cursuri",
-                description: "Peste 2.8 milioane de elevi din România încep astăzi noul an școlar. Ministerul Educației anunță investiții în modernizarea școlilor.",
-                category: 'social',
-                source: 'Ministerul Educației',
-                time: '8 h',
-                url: '#'
-            },
-            {
-                id: 10,
-                title: "România devine membru în Consiliul de Securitate al ONU",
-                description: "Țara noastră a fost aleasă membru nepermanent al Consiliului de Securitate pentru următorii doi ani.",
-                category: 'international',
-                source: 'MAE România',
-                time: '9 h',
-                url: '#'
-            },
-            {
-                id: 11,
-                title: "Simona Halep se întoarce în circuitul profesionist de tenis",
-                description: "Fostul număr 1 mondial anunță revenirea în competițiile oficiale după perioada de suspendare.",
-                category: 'sport',
-                source: 'WTA Tour',
-                time: '10 h',
-                url: '#'
-            },
-            {
-                id: 12,
-                title: "Reuniune a Consiliului Suprem de Apărare a Țării",
-                description: "Președintele Klaus Iohannis a convocat CSAT pentru evaluarea situației de securitate regională și adoptarea unor măsuri preventive.",
-                category: 'politica',
-                source: 'Administrația Prezidențială',
-                time: '11 h',
-                url: '#'
+                id: 'adevarul',
+                name: 'Adevărul',
+                rss: 'https://adevarul.ro/rss',
+                website: 'https://adevarul.ro'
             }
         ];
 
-        let currentFilter = 'toate';
-        let bookmarks = JSON.parse(localStorage.getItem('newsapp-bookmarks') || '[]');
+        // RSS to JSON converter
+        const RSS_TO_JSON_API = 'https://api.rss2json.com/v1/api.json?rss_url=';
+
+        // App State
+        let state = {
+            newsData: [],
+            filteredData: [],
+            currentFilter: 'toate',
+            searchTerm: '',
+            bookmarks: JSON.parse(localStorage.getItem('newsapp-bookmarks') || '[]'),
+            lastUpdate: null,
+            isLoading: false,
+            apiStatus: 'offline'
+        };
+
+        // Function to get time ago
+        function getTimeAgo(dateString) {
+            const now = new Date();
+            const date = new Date(dateString);
+            const diffInMinutes = Math.floor((now - date) / (1000 * 60));
+            
+            if (diffInMinutes < 1) return 'Acum';
+            if (diffInMinutes < 60) return `${diffInMinutes} min`;
+            if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)} h`;
+            return `${Math.floor(diffInMinutes / 1440)} zile`;
+        }
+
+        // Function to clean text from HTML
+        function cleanText(text) {
+            if (!text) return 'Fără descriere disponibilă';
+            
+            // Remove HTML tags
+            const cleaned = text.replace(/<[^>]*>/g, '');
+            // Decode HTML entities
+            const decoded = cleaned
+                .replace(/&amp;/g, '&')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/&quot;/g, '"')
+                .replace(/&#39;/g, "'")
+                .replace(/&nbsp;/g, ' ');
+            
+            // Limit length and clean up
+            return decoded.length > 200 ? decoded.substring(0, 200).trim() + '...' : decoded.trim();
+        }
+
+        // Function to update API status
+        function updateApiStatus(online, message) {
+            const statusEl = document.getElementById('apiStatus');
+            const textEl = document.getElementById('statusText');
+            
+            state.apiStatus = online ? 'online' : 'offline';
+            statusEl.className = `api-status ${state.apiStatus}`;
+            textEl.textContent = message;
+        }
+
+        // Function to load news from RSS feeds
+        async function loadNews() {
+            if (state.isLoading) return;
+
+            state.isLoading = true;
+            showLoading(true);
+            updateApiStatus(false, 'Se conectează...');
+
+            try {
+                const allArticles = [];
+                let successfulSources = 0;
+
+                // Load from all RSS sources
+                for (const source of RSS_SOURCES) {
+                    try {
+                        console.log(`Loading from ${source.name}...`);
+                        
+                        const response = await fetch(`${RSS_TO_JSON_API}${encodeURIComponent(source.rss)}&api_key=no&count=15`);
+                        
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}`);
+                        }
+                        
+                        const data = await response.json();
+                        
+                        if (data.status === 'ok' && data.items && data.items.length > 0) {
+                            const articles = data.items.map((item, index) => ({
+                                id: `${source.id}-${index}-${Date.now()}`,
+                                title: item.title || 'Fără titlu',
+                                description: cleanText(item.description || item.content),
+                                url: item.link || source.website,
+                                urlToImage: item.enclosure?.link || item.thumbnail || null,
+                                publishedAt: item.pubDate || new Date().toISOString(),
+                                source: source.name,
+                                sourceId: source.id,
+                                isFresh: new Date(item.pubDate) > new Date(Date.now() - 3600000) // Fresh if less than 1 hour old
+                            }));
+                            
+                            allArticles.push(...articles);
+                            successfulSources++;
+                            console.log(`✅ Loaded ${articles.length} articles from ${source.name}`);
+                        }
+                    } catch (error) {
+                        console.warn(`❌ Failed to load from ${source.name}:`, error.message);
+                    }
+                }
+
+                if (allArticles.length > 0) {
+                    // Sort by publish date (newest first)
+                    state.newsData = allArticles.sort((a, b) => 
+                        new Date(b.publishedAt) - new Date(a.publishedAt)
+                    );
+                    
+                    state.lastUpdate = new Date();
+                    updateApiStatus(true, `Online - ${successfulSources}/${RSS_SOURCES.length} surse`);
+                    console.log(`✅ Total loaded: ${state.newsData.length} articles`);
+                    
+                    showError(false);
+                } else {
+                    throw new Error('No articles loaded from any source');
+                }
+
+            } catch (error) {
+                console.error('❌ Error loading news:', error);
+                updateApiStatus(false, 'Offline - Eroare conexiune');
+                showError(true);
+                
+                // Keep existing data if available
+                if (state.newsData.length === 0) {
+                    // No existing data, show fallback
+                    state.newsData = [
+                        {
+                            id: 'fallback-1',
+                            title: 'NewsApp - Aplicația de știri din România',
+                            description: 'Aplicația încearcă să se conecteze la sursele de știri. Verifică conexiunea la internet și încearcă din nou.',
+                            url: '#',
+                            urlToImage: null,
+                            publishedAt: new Date().toISOString(),
+                            source: 'NewsApp',
+                            sourceId: 'system',
+                            isFresh: false
+                        }
+                    ];
+                }
+            } finally {
+                state.isLoading = false;
+                showLoading(false);
+                filterNews(state.currentFilter);
+                updateStats();
+            }
+        }
+
+        // Function to show/hide loading
+        function showLoading(show) {
+            document.getElementById('loadingState').style.display = show ? 'block' : 'none';
+            document.getElementById('newsGrid').style.display = show ? 'none' : 'grid';
+        }
+
+        // Function to show/hide error
+        function showError(show) {
+            document.getElementById('errorState').style.display = show ? 'block' : 'none';
+            document.getElementById('newsGrid').style.display = show ? 'none' : 'grid';
+        }
+
+        // Function to filter news
+        function filterNews(sourceId) {
+            state.currentFilter = sourceId;
+            
+            // Update active tab
+            document.querySelectorAll('.tab-item').forEach(tab => tab.classList.remove('active'));
+            event?.target?.classList.add('active');
+            
+            // Filter articles
+            if (sourceId === 'toate') {
+                state.filteredData = state.newsData;
+            } else {
+                state.filteredData = state.newsData.filter(article => article.sourceId === sourceId);
+            }
+            
+            // Apply search filter if any
+            if (state.searchTerm) {
+                state.filteredData = state.filteredData.filter(article =>
+                    article.title.toLowerCase().includes(state.searchTerm.toLowerCase()) ||
+                    article.description.toLowerCase().includes(state.searchTerm.toLowerCase())
+                );
+            }
+            
+            renderNews();
+            updateStats();
+        }
 
         // Function to render news
-        function renderNews(articles = newsData) {
+        function renderNews() {
             const newsGrid = document.getElementById('newsGrid');
             
-            newsGrid.innerHTML = articles.map(article => `
+            if (state.filteredData.length === 0) {
+                newsGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 2rem; color: #8a8a8a;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">📰</div>
+                        <h3>Nu s-au găsit știri</h3>
+                        <p>Încearcă să schimbi filtrul sau să cauți altceva</p>
+                    </div>
+                `;
+                return;
+            }
+
+            newsGrid.innerHTML = state.filteredData.map(article => `
                 <div class="news-card" onclick="openArticle('${article.url}')">
-                    <div class="news-image">📰</div>
+                    <div class="news-image">
+                        ${article.urlToImage ? 
+                            `<img src="${article.urlToImage}" alt="${article.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                             <div style="display:none; width:100%; height:100%; align-items:center; justify-content:center; font-size:2.5rem; color:#8a8a8a;">📰</div>` :
+                            `📰`
+                        }
+                        ${article.isFresh ? '<div class="fresh-badge">NOU</div>' : ''}
+                    </div>
                     <div class="news-content">
                         <div class="news-meta">
                             <span class="news-source">${article.source}</span>
-                            <span>${article.time}</span>
+                            <span class="news-time">${getTimeAgo(article.publishedAt)}</span>
                         </div>
                         <h3 class="news-title">${article.title}</h3>
                         <p class="news-description">${article.description}</p>
                         <div class="news-actions">
-                            <button class="bookmark-btn ${bookmarks.includes(article.id) ? 'active' : ''}" 
-                                    onclick="event.stopPropagation(); toggleBookmark(${article.id})">
-                                ${bookmarks.includes(article.id) ? '⭐' : '☆'}
+                            <button class="bookmark-btn ${state.bookmarks.includes(article.id) ? 'active' : ''}" 
+                                    onclick="event.stopPropagation(); toggleBookmark('${article.id}')"
+                                    title="${state.bookmarks.includes(article.id) ? 'Elimină din salvate' : 'Salvează'}">
+                                ${state.bookmarks.includes(article.id) ? '⭐' : '☆'}
                             </button>
                             <a href="${article.url}" target="_blank" class="read-more" onclick="event.stopPropagation();">
                                 Citește
@@ -598,97 +857,12 @@
                     </div>
                 </div>
             `).join('');
-
-            // Update stats
-            document.getElementById('filteredNews').textContent = articles.length;
-            document.getElementById('bookmarkedNews').textContent = bookmarks.length;
         }
 
-        // Function to filter news
-        function filterNews(category) {
-            currentFilter = category;
+        // Function to update stats
+        function updateStats() {
+            document.getElementById('totalNews').textContent = state.newsData.length;
+            document.getElementById('filteredNews').textContent = state.filteredData.length;
+            document.getElementById('bookmarkedNews').textContent = state.bookmarks.length;
             
-            // Update active tab
-            document.querySelectorAll('.tab-item').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            // Filter articles
-            let filteredArticles = newsData;
-            if (category !== 'toate') {
-                filteredArticles = newsData.filter(article => article.category === category);
-            }
-            
-            renderNews(filteredArticles);
-        }
-
-        // Function to toggle bookmark
-        function toggleBookmark(articleId) {
-            if (bookmarks.includes(articleId)) {
-                bookmarks = bookmarks.filter(id => id !== articleId);
-            } else {
-                bookmarks.push(articleId);
-            }
-            localStorage.setItem('newsapp-bookmarks', JSON.stringify(bookmarks));
-            
-            // Re-render with current filter
-            let filteredArticles = newsData;
-            if (currentFilter !== 'toate') {
-                filteredArticles = newsData.filter(article => article.category === currentFilter);
-            }
-            renderNews(filteredArticles);
-        }
-
-        // Function to open article
-        function openArticle(url) {
-            if (url !== '#') {
-                window.open(url, '_blank');
-            }
-        }
-
-        // Search functionality
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const filteredArticles = newsData.filter(article =>
-                article.title.toLowerCase().includes(searchTerm) ||
-                article.description.toLowerCase().includes(searchTerm)
-            );
-            renderNews(filteredArticles);
-        });
-
-        // Refresh functionality
-        document.getElementById('refreshBtn').addEventListener('click', function() {
-            this.classList.add('loading');
-            
-            setTimeout(() => {
-                this.classList.remove('loading');
-                
-                // Update timestamp
-                const now = new Date();
-                document.getElementById('lastUpdate').textContent = 
-                    now.getHours().toString().padStart(2, '0') + ':' + 
-                    now.getMinutes().toString().padStart(2, '0');
-                    
-                // Re-render current view
-                let filteredArticles = newsData;
-                if (currentFilter !== 'toate') {
-                    filteredArticles = newsData.filter(article => article.category === currentFilter);
-                }
-                renderNews(filteredArticles);
-            }, 1000);
-        });
-
-        // Initialize app
-        document.addEventListener('DOMContentLoaded', function() {
-            renderNews();
-            console.log('✅ NewsApp loaded successfully with', newsData.length, 'articles');
-        });
-
-        // Service Worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').catch(console.error);
-        }
-    </script>
-</body>
-</html>
+            if (state.lastUpdate) {

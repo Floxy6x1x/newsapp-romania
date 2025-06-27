@@ -319,6 +319,27 @@
             }
         }
 
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
         .news-card.new-article {
             border: 2px solid #27ae60;
             box-shadow: 0 8px 32px rgba(39, 174, 96, 0.2);
@@ -814,32 +835,58 @@
             }
 
             generateSampleNews() {
-                const categories = ['breaking', 'politics', 'business', 'social', 'sports', 'technology'];
-                const sampleTitles = [
-                    "Noi măsuri economice anunțate de guvern pentru 2025",
-                    "România câștigă medalia de aur la Campionatul European",
-                    "Tehnologie revoluționară implementată în spitalele din țară",
-                    "Proteste în București pentru îmbunătățirea infrastructurii",
-                    "Investiții masive în energia regenerabilă",
-                    "Noul sistem de transport public din Cluj-Napoca",
-                    "Creștere record a exporturilor românești",
-                    "Digitalizarea administrației publice face progrese",
-                    "Campanie națională pentru protecția mediului",
-                    "Startup-uri românești în topul european",
-                    "Reforma sistemului de sănătate intră în vigoare",
-                    "Dezvoltarea rețelei de autostrăzi continuă",
-                    "Premii internaționale pentru cercetători români",
-                    "Noi oportunități de finanțare pentru IMM-uri",
-                    "Festival de cultură românească în capitală"
+                const newsData = [
+                    {
+                        title: "Noi măsuri economice anunțate de guvern pentru 2025",
+                        description: "Guvernul României a anunțat un pachet de măsuri economice pentru stimularea creșterii în 2025, incluzând reduceri de taxe pentru IMM-uri și investiții în infrastructură.",
+                        category: "business",
+                        source: "Agerpres",
+                        url: "https://www.agerpres.ro",
+                        fullContent: "Guvernul României a aprobat astăzi un pachet comprehensiv de măsuri economice destinat stimulării creșterii economice în anul 2025. Pachetul include reduceri semnificative de taxe pentru întreprinderile mici și mijlocii, investiții masive în infrastructură și programe de sprijin pentru antreprenoriat. Potrivit ministrului Economiei, aceste măsuri vor genera aproximativ 100.000 de locuri de muncă noi și vor crește PIB-ul cu 3.5% în următorii doi ani. Reducerile de taxe se vor aplica începând cu 1 aprilie 2025 și vor beneficia peste 500.000 de companii din România."
+                    },
+                    {
+                        title: "România câștigă medalia de aur la Campionatul European",
+                        description: "Echipa națională de fotbal feminin a României a cucerit medalia de aur la Campionatul European, într-o finală spectaculoasă.",
+                        category: "sports",
+                        source: "ProTV",
+                        url: "https://stirileprotv.ro",
+                        fullContent: "Într-o seară de neuitat pentru fotbalul românesc, echipa națională feminină a câștigat medalia de aur la Campionatul European, învingând Franța cu scorul de 2-1 în finală. Golurile au fost marcate de Ioana Popescu în minutul 23 și Alexandra Marinescu în minutul 67, în timp ce Franța a redus din diferență prin Dubois în minutul 85. Antrenorul Mircea Rednic a declarat că aceasta este cea mai mare performanță din cariera sa. Echipa se va întoarce mâine în țară unde va fi primită cu onoruri la Palatul Victoria."
+                    },
+                    {
+                        title: "Tehnologie revoluționară implementată în spitalele din țară",
+                        description: "Sistemul medical românesc adoptă o nouă tehnologie de diagnostic AI care poate detecta bolile cu o precizie de 95%.",
+                        category: "technology",
+                        source: "HotNews",
+                        url: "https://www.hotnews.ro",
+                        fullContent: "Ministerul Sănătății a anunțat implementarea unui sistem revoluționar de diagnostic bazat pe inteligență artificială în 50 de spitale din România. Tehnologia, dezvoltată în parteneriat cu o companie românească de IT, poate detecta boli cardiovasculare, cancer și alte afecțiuni cu o precizie de 95%. Sistemul analizează imagini medicale în timp real și oferă diagnostice în mai puțin de 5 minute. Primul spital care va beneficia de această tehnologie este Spitalul Universitar din București, urmând ca până la sfârșitul anului să fie implementată în toate spitalele județene."
+                    },
+                    {
+                        title: "Proteste în București pentru îmbunătățirea infrastructurii",
+                        description: "Mii de cetățeni au ieșit în strada pentru a cere autorităților îmbunătățirea infrastructurii de transport public.",
+                        category: "social",
+                        source: "Digi24",
+                        url: "https://www.digi24.ro",
+                        fullContent: "Aproximativ 5.000 de cetățeni s-au adunat astăzi în Piața Victoriei pentru a protesta pașnic în favoarea îmbunătățirii infrastructurii de transport public din București. Manifestanții cer extinderea rețelei de metrou, modernizarea autobuzelor și tramvaielor, și construirea de noi piste de biciclete. Primarul Capitalei, Nicușor Dan, a ieșit să discute cu protestatarii și a promis că va prezenta în următoarele două săptămâni un plan concret de investiții în transportul public. Protestul s-a desfășurat fără incidente, participanții fiind foarte organizați și pașnici."
+                    },
+                    {
+                        title: "Investiții masive în energia regenerabilă",
+                        description: "România va investi 2 miliarde de euro în parcuri eoliene și solare până în 2027, devenind lider regional în energie verde.",
+                        category: "business",
+                        source: "Mediafax",
+                        url: "https://www.mediafax.ro",
+                        fullContent: "Guvernul României a semnat astăzi contracte în valoare de 2 miliarde de euro pentru dezvoltarea de parcuri eoliene și solare pe teritoriul național. Proiectele vor fi finalizate până în 2027 și vor genera 3.000 MW de energie verde, suficient pentru alimentarea a 2 milioane de gospodării. România devine astfel liderul regional în tranziția către energia regenerabilă. Ministrul Energiei a declarat că aceste investiții vor crea 15.000 de locuri de muncă și vor reduce dependența de importurile de energie cu 40%. Primul parc solar va fi construit în județul Constanța și va fi operațional din 2026."
+                    }
                 ];
 
-                return sampleTitles.map((title, index) => ({
+                return newsData.map((article, index) => ({
                     id: index + 1,
-                    title,
-                    description: `Această știre oferă detalii importante despre ${title.toLowerCase()}. Informațiile sunt actualizate și verificate de echipa noastră de redacție.`,
-                    category: categories[index % categories.length],
-                    publishedAt: new Date(Date.now() - Math.random() * 86400000 * 7), // Random time in last 7 days
-                    source: ['Agerpres', 'Mediafax', 'HotNews', 'Digi24', 'ProTV'][Math.floor(Math.random() * 5)],
+                    title: article.title,
+                    description: article.description,
+                    category: article.category,
+                    publishedAt: new Date(Date.now() - Math.random() * 86400000 * 7),
+                    source: article.source,
+                    url: article.url,
+                    fullContent: article.fullContent,
                     isSaved: this.savedNews.includes(index + 1)
                 }));
             }
@@ -952,9 +999,177 @@
 
             openArticle(articleId) {
                 const article = this.news.find(a => a.id === articleId);
-                if (article) {
-                    alert(`Articol: ${article.title}\n\n${article.description}\n\nSursă: ${article.source}\nData: ${this.formatDate(article.publishedAt)}`);
-                }
+                if (!article) return;
+
+                // Create modal overlay
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.8);
+                    backdrop-filter: blur(5px);
+                    z-index: 9999;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 2rem;
+                    animation: fadeIn 0.3s ease-out;
+                `;
+
+                // Create modal content
+                const modalContent = document.createElement('div');
+                modalContent.style.cssText = `
+                    background: white;
+                    border-radius: 15px;
+                    max-width: 800px;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                    position: relative;
+                    animation: slideIn 0.3s ease-out;
+                `;
+
+                modalContent.innerHTML = `
+                    <div style="padding: 2rem;">
+                        <button id="closeModal" style="
+                            position: absolute;
+                            top: 1rem;
+                            right: 1rem;
+                            background: #e74c3c;
+                            color: white;
+                            border: none;
+                            border-radius: 50%;
+                            width: 40px;
+                            height: 40px;
+                            cursor: pointer;
+                            font-size: 1.2rem;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        ">×</button>
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <span style="
+                                background: #1e3c72;
+                                color: white;
+                                padding: 0.5rem 1rem;
+                                border-radius: 20px;
+                                font-size: 0.9rem;
+                                font-weight: 500;
+                            ">${this.getCategoryName(article.category)}</span>
+                        </div>
+                        
+                        <h1 style="
+                            font-size: 1.8rem;
+                            color: #1e3c72;
+                            margin-bottom: 1rem;
+                            line-height: 1.3;
+                        ">${article.title}</h1>
+                        
+                        <div style="
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            margin-bottom: 2rem;
+                            padding-bottom: 1rem;
+                            border-bottom: 2px solid #eee;
+                            flex-wrap: wrap;
+                            gap: 1rem;
+                        ">
+                            <div>
+                                <strong style="color: #1e3c72;">${article.source}</strong>
+                                <span style="color: #666; margin-left: 1rem;">${this.formatDate(article.publishedAt)}</span>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button onclick="app.toggleSave(${article.id}); this.innerHTML = app.news.find(a => a.id === ${article.id}).isSaved ? '💾 Salvat' : '💾 Salvează'" 
+                                        style="
+                                            padding: 0.5rem 1rem;
+                                            border: 2px solid #1e3c72;
+                                            background: ${article.isSaved ? '#1e3c72' : 'white'};
+                                            color: ${article.isSaved ? 'white' : '#1e3c72'};
+                                            border-radius: 20px;
+                                            cursor: pointer;
+                                            font-weight: 500;
+                                        ">
+                                    ${article.isSaved ? '💾 Salvat' : '💾 Salvează'}
+                                </button>
+                                <button onclick="window.open('${article.url}', '_blank')" 
+                                        style="
+                                            padding: 0.5rem 1rem;
+                                            border: none;
+                                            background: #27ae60;
+                                            color: white;
+                                            border-radius: 20px;
+                                            cursor: pointer;
+                                            font-weight: 500;
+                                        ">
+                                    🔗 Vezi pe ${article.source}
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div style="
+                            font-size: 1.1rem;
+                            line-height: 1.8;
+                            color: #333;
+                            text-align: justify;
+                        ">
+                            ${article.fullContent}
+                        </div>
+                        
+                        <div style="
+                            margin-top: 2rem;
+                            padding-top: 1rem;
+                            border-top: 2px solid #eee;
+                            text-align: center;
+                        ">
+                            <button onclick="window.open('${article.url}', '_blank')" 
+                                    style="
+                                        padding: 1rem 2rem;
+                                        border: none;
+                                        background: linear-gradient(45deg, #1e3c72, #2a5298);
+                                        color: white;
+                                        border-radius: 25px;
+                                        cursor: pointer;
+                                        font-weight: bold;
+                                        font-size: 1.1rem;
+                                        box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3);
+                                    ">
+                                📖 Citește articolul complet pe ${article.source}
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                modal.appendChild(modalContent);
+                document.body.appendChild(modal);
+
+                // Close modal handlers
+                const closeModal = () => {
+                    modal.style.animation = 'fadeOut 0.3s ease-in forwards';
+                    setTimeout(() => {
+                        if (modal.parentNode) {
+                            modal.parentNode.removeChild(modal);
+                        }
+                    }, 300);
+                };
+
+                document.getElementById('closeModal').addEventListener('click', closeModal);
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) closeModal();
+                });
+
+                // ESC key to close
+                const handleEscape = (e) => {
+                    if (e.key === 'Escape') {
+                        closeModal();
+                        document.removeEventListener('keydown', handleEscape);
+                    }
+                };
+                document.addEventListener('keydown', handleEscape);
             }
 
             updateStats() {

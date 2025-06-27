@@ -379,8 +379,14 @@
 
             async loadNews() {
                 try {
-                    document.getElementById('loading').style.display = 'block';
-                    document.getElementById('status').innerHTML = '🔄 Se încarcă...';
+                    const loadingEl = document.getElementById('loading');
+                    const statusEl = document.getElementById('status');
+                    
+                    if (loadingEl) loadingEl.style.display = 'block';
+                    if (statusEl) {
+                        statusEl.innerHTML = '🔄 Se încarcă...';
+                        statusEl.className = 'status';
+                    }
                     
                     // Simulate API call with sample Romanian news data
                     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -392,9 +398,11 @@
                     this.updateStats();
                     this.updateLastUpdateTime();
                     
-                    document.getElementById('status').innerHTML = '✅ Online';
-                    document.getElementById('status').className = 'status online';
-                    document.getElementById('loading').style.display = 'none';
+                    if (statusEl) {
+                        statusEl.innerHTML = '✅ Online';
+                        statusEl.className = 'status online';
+                    }
+                    if (loadingEl) loadingEl.style.display = 'none';
                     
                 } catch (error) {
                     console.error('Error loading news:', error);
@@ -547,18 +555,25 @@
             }
 
             updateStats() {
-                document.getElementById('totalNews').textContent = this.news.length;
-                document.getElementById('displayedNews').textContent = this.filteredNews.length;
-                document.getElementById('savedNews').textContent = this.savedNews.length;
+                const totalEl = document.getElementById('totalNews');
+                const displayedEl = document.getElementById('displayedNews');
+                const savedEl = document.getElementById('savedNews');
+                
+                if (totalEl) totalEl.textContent = this.news.length;
+                if (displayedEl) displayedEl.textContent = this.filteredNews.length;
+                if (savedEl) savedEl.textContent = this.savedNews.length;
             }
 
             updateLastUpdateTime() {
-                const now = new Date();
-                const timeString = now.toLocaleTimeString('ro-RO', { 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                });
-                document.getElementById('lastUpdate').textContent = timeString;
+                const updateEl = document.getElementById('lastUpdate');
+                if (updateEl) {
+                    const now = new Date();
+                    const timeString = now.toLocaleTimeString('ro-RO', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                    });
+                    updateEl.textContent = timeString;
+                }
             }
 
             showError(message) {

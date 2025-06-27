@@ -5,25 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#1e3c72">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="NewsApp">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' fill='%231e3c72'/%3E%3Ctext x='90' y='130' font-size='90' text-anchor='middle' fill='white'%3E📰%3C/text%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📰%3C/text%3E%3C/svg%3E">
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIk5ld3NBcHAgUm9tw6JuaWEiLAogICJzaG9ydF9uYW1lIjogIk5ld3NBcHAiLAogICJkZXNjcmlwdGlvbiI6ICJBcGxpY2HDp2llIGRlIMOedGlyaSBkaW4gUm9tw6JuaWEiLAogICJzdGFydF91cmwiOiAiLyIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgInRoZW1lX2NvbG9yIjogIiMxZTNjNzIiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNmZmZmZmYiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWwsJTNDc3ZnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zycgdmlld0JveD0nMCAwIDEwMCAxMDAnJTNFJTNDdGV4dCB5PScuOWVtJyBmb250LXNpemU9JzkwJyUzRSVGMCU5RiU5MyVCMCUzQy90ZXh0JTNFJTNDL3N2ZyUzRSIsCiAgICAgICJzaXplcyI6ICIxOTJ4MTkyIiwKICAgICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIsCiAgICAgICJwdXJwb3NlIjogImFueSBtYXNrYWJsZSIKICAgIH0sCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA1MTIgNTEyJyUzRSUzQ3JlY3Qgd2lkdGg9JzUxMicgaGVpZ2h0PSc1MTInIGZpbGw9JyUyMzFlM2M3MicvJTNFJTNDdGV4dCB4PSc2NCcgeT0nMzgwJyBmb250LXNpemU9JzM2MCcgZmlsbD0nd2hpdGUnJTNFJUYwJTlGJTkzJUIwJTNDL3RleHQlM0UlM0Mvc3ZnJTNFIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIiwKICAgICAgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIgogICAgfQogIF0KfQ==">
     <title>NewsApp România</title>
-    <script type="application/json" id="manifest">
-    {
-        "name": "NewsApp România",
-        "short_name": "NewsApp",
-        "description": "Aplicație de știri din România",
-        "start_url": "/",
-        "display": "standalone",
-        "theme_color": "#1e3c72",
-        "background_color": "#ffffff",
-        "icons": [
-            {
-                "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📰%3C/text%3E%3C/svg%3E",
-                "sizes": "192x192",
-                "type": "image/svg+xml"
-            }
-        ]
-    }
-    </script>
     <style>
         * {
             margin: 0;
@@ -107,6 +95,26 @@
         .btn-primary:hover {
             background: #2a5298;
             transform: translateY(-2px);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        #installBtn {
+            background: linear-gradient(45deg, #8e44ad, #9b59b6) !important;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(142, 68, 173, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(142, 68, 173, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(142, 68, 173, 0); }
         }
 
         .status {
@@ -392,15 +400,129 @@
                 this.lastUpdateTime = localStorage.getItem('lastUpdateTime') || null;
                 this.autoRefreshInterval = null;
                 this.notificationsEnabled = false;
+                this.serviceWorker = null;
+                this.deferredPrompt = null;
                 this.init();
             }
 
-            init() {
+            async init() {
+                await this.registerServiceWorker();
+                this.setupPWAInstallPrompt();
                 this.requestNotificationPermission();
                 this.setupEventListeners();
                 this.loadNews();
                 this.updateStats();
                 this.startAutoRefresh();
+            }
+
+            async registerServiceWorker() {
+                if ('serviceWorker' in navigator) {
+                    try {
+                        // Inline service worker pentru simplitate
+                        const swCode = `
+                            const CACHE_NAME = 'newsapp-v1';
+                            const urlsToCache = [
+                                '/',
+                                '/index.html'
+                            ];
+
+                            self.addEventListener('install', event => {
+                                event.waitUntil(
+                                    caches.open(CACHE_NAME)
+                                        .then(cache => cache.addAll(urlsToCache))
+                                );
+                            });
+
+                            self.addEventListener('fetch', event => {
+                                event.respondWith(
+                                    caches.match(event.request)
+                                        .then(response => response || fetch(event.request))
+                                );
+                            });
+
+                            self.addEventListener('notificationclick', event => {
+                                event.notification.close();
+                                event.waitUntil(
+                                    clients.openWindow('/')
+                                );
+                            });
+
+                            self.addEventListener('push', event => {
+                                if (event.data) {
+                                    const data = event.data.json();
+                                    self.registration.showNotification(data.title, {
+                                        body: data.body,
+                                        icon: '/icon-192.png',
+                                        badge: '/badge-72.png',
+                                        vibrate: [100, 50, 100],
+                                        data: data.url
+                                    });
+                                }
+                            });
+                        `;
+                        
+                        const blob = new Blob([swCode], { type: 'application/javascript' });
+                        const swUrl = URL.createObjectURL(blob);
+                        
+                        this.serviceWorker = await navigator.serviceWorker.register(swUrl);
+                        console.log('Service Worker registered successfully');
+                        
+                        // Cleanup blob URL after registration
+                        URL.revokeObjectURL(swUrl);
+                        
+                    } catch (error) {
+                        console.log('Service Worker registration failed:', error);
+                    }
+                }
+            }
+
+            setupPWAInstallPrompt() {
+                window.addEventListener('beforeinstallprompt', (e) => {
+                    e.preventDefault();
+                    this.deferredPrompt = e;
+                    this.showInstallButton();
+                });
+
+                window.addEventListener('appinstalled', () => {
+                    this.hideInstallButton();
+                    this.showNotification('📱 Aplicația a fost instalată!', 'NewsApp România este acum disponibilă pe ecranul principal.');
+                });
+            }
+
+            showInstallButton() {
+                const installBtn = document.createElement('button');
+                installBtn.id = 'installBtn';
+                installBtn.className = 'btn';
+                installBtn.innerHTML = '📱 Instalează App';
+                installBtn.style.cssText = `
+                    background: linear-gradient(45deg, #8e44ad, #9b59b6);
+                    color: white;
+                    margin-left: 0.5rem;
+                `;
+                
+                installBtn.addEventListener('click', () => {
+                    if (this.deferredPrompt) {
+                        this.deferredPrompt.prompt();
+                        this.deferredPrompt.userChoice.then((choiceResult) => {
+                            if (choiceResult.outcome === 'accepted') {
+                                console.log('User accepted the install prompt');
+                            }
+                            this.deferredPrompt = null;
+                        });
+                    }
+                });
+
+                const controls = document.querySelector('.controls');
+                if (controls && !document.getElementById('installBtn')) {
+                    controls.appendChild(installBtn);
+                }
+            }
+
+            hideInstallButton() {
+                const installBtn = document.getElementById('installBtn');
+                if (installBtn) {
+                    installBtn.remove();
+                }
             }
 
             async requestNotificationPermission() {
@@ -409,19 +531,69 @@
                     this.notificationsEnabled = permission === 'granted';
                     
                     if (this.notificationsEnabled) {
-                        this.showNotification('🔔 Notificări activate!', 'Vei primi alerte pentru știri noi la fiecare 30 de minute.');
+                        this.showNotification(
+                            '🔔 Notificări activate!', 
+                            'Vei primi alerte pentru știri noi la fiecare 30 de minute.',
+                            {
+                                tag: 'welcome',
+                                vibrate: [100, 50, 100],
+                                actions: [
+                                    {
+                                        action: 'view',
+                                        title: 'Vezi știrile',
+                                        icon: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"%3E%3Cpath fill="white" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/%3E%3C/svg%3E'
+                                    }
+                                ]
+                            }
+                        );
+                        
+                        // Update button state
+                        const notifBtn = document.getElementById('notificationBtn');
+                        if (notifBtn) {
+                            notifBtn.innerHTML = '🔔 Active';
+                            notifBtn.style.background = '#27ae60';
+                        }
+                    } else {
+                        const notifBtn = document.getElementById('notificationBtn');
+                        if (notifBtn) {
+                            notifBtn.innerHTML = '🔕 Blocate';
+                            notifBtn.style.background = '#e74c3c';
+                        }
                     }
                 }
             }
 
             showNotification(title, body, options = {}) {
                 if (this.notificationsEnabled) {
-                    new Notification(title, {
+                    const defaultOptions = {
                         body: body,
-                        icon: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ctext y=".9em" font-size="90"%3E📰%3C/text%3E%3C/svg%3E',
-                        badge: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ctext y=".9em" font-size="90"%3E📰%3C/text%3E%3C/svg%3E',
+                        icon: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"%3E%3Crect width="180" height="180" fill="%231e3c72"/%3E%3Ctext x="90" y="130" font-size="90" text-anchor="middle" fill="white"%3E📰%3C/text%3E%3C/svg%3E',
+                        badge: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"%3E%3Crect width="72" height="72" fill="%231e3c72"/%3E%3Ctext x="36" y="50" font-size="36" text-anchor="middle" fill="white"%3E📰%3C/text%3E%3C/svg%3E',
+                        vibrate: [200, 100, 200],
+                        tag: 'news-update',
+                        requireInteraction: false,
+                        timestamp: Date.now(),
                         ...options
-                    });
+                    };
+
+                    if (this.serviceWorker && this.serviceWorker.showNotification) {
+                        // Use service worker for persistent notifications
+                        this.serviceWorker.showNotification(title, defaultOptions);
+                    } else {
+                        // Fallback to regular notifications
+                        const notification = new Notification(title, defaultOptions);
+                        
+                        notification.onclick = () => {
+                            window.focus();
+                            notification.close();
+                            if (options.onclick) options.onclick();
+                        };
+
+                        // Auto close after 10 seconds
+                        setTimeout(() => {
+                            notification.close();
+                        }, 10000);
+                    }
                 }
             }
 
@@ -789,10 +961,28 @@
                 const totalEl = document.getElementById('totalNews');
                 const displayedEl = document.getElementById('displayedNews');
                 const savedEl = document.getElementById('savedNews');
+                const pwaStatusEl = document.getElementById('pwaStatus');
+                const pwaLabelEl = document.getElementById('pwaLabel');
                 
                 if (totalEl) totalEl.textContent = this.news.length;
                 if (displayedEl) displayedEl.textContent = this.filteredNews.length;
                 if (savedEl) savedEl.textContent = this.savedNews.length;
+                
+                // PWA status indicator
+                if (pwaStatusEl && pwaLabelEl) {
+                    const isPWA = window.matchMedia('(display-mode: standalone)').matches || 
+                                  window.navigator.standalone === true;
+                    
+                    if (isPWA) {
+                        pwaStatusEl.textContent = '📱';
+                        pwaLabelEl.textContent = 'App Mode';
+                        pwaStatusEl.style.color = '#27ae60';
+                    } else {
+                        pwaStatusEl.textContent = '🌐';
+                        pwaLabelEl.textContent = 'Browser';
+                        pwaStatusEl.style.color = '#3498db';
+                    }
+                }
             }
 
             updateLastUpdateTime() {

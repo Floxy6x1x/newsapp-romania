@@ -3,1276 +3,774 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#1e3c72">
+    <title>Știri - AdInstalGaz</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#007AFF">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="NewsApp">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' fill='%231e3c72'/%3E%3Ctext x='90' y='130' font-size='90' text-anchor='middle' fill='white'%3E📰%3C/text%3E%3C/svg%3E">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📰%3C/text%3E%3C/svg%3E">
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIk5ld3NBcHAgUm9tw6JuaWEiLAogICJzaG9ydF9uYW1lIjogIk5ld3NBcHAiLAogICJkZXNjcmlwdGlvbiI6ICJBcGxpY2HDp2llIGRlIMOedGlyaSBkaW4gUm9tw6JuaWEiLAogICJzdGFydF91cmwiOiAiLyIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgInRoZW1lX2NvbG9yIjogIiMxZTNjNzIiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNmZmZmZmYiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWwsJTNDc3ZnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zycgdmlld0JveD0nMCAwIDEwMCAxMDAnJTNFJTNDdGV4dCB5PScuOWVtJyBmb250LXNpemU9JzkwJyUzRSVGMCU5RiU5MyVCMCUzQy90ZXh0JTNFJTNDL3N2ZyUzRSIsCiAgICAgICJzaXplcyI6ICIxOTJ4MTkyIiwKICAgICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIsCiAgICAgICJwdXJwb3NlIjogImFueSBtYXNrYWJsZSIKICAgIH0sCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA1MTIgNTEyJyUzRSUzQ3JlY3Qgd2lkdGg9JzUxMicgaGVpZ2h0PSc1MTInIGZpbGw9JyUyMzFlM2M3MicvJTNFJTNDdGV4dCB4PSc2NCcgeT0nMzgwJyBmb250LXNpemU9JzM2MCcgZmlsbD0nd2hpdGUnJTNFJUYwJTlGJTkzJUIwJTNDL3RleHQlM0UlM0Mvc3ZnJTNFIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIiwKICAgICAgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIgogICAgfQogIF0KfQ==">
-    <title>NewsApp România</title>
+    <meta name="apple-mobile-web-app-title" content="Știri">
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23007AFF'/><text y='70' font-size='60' fill='white'>📰</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23007AFF'/><text y='70' font-size='60' fill='white'>📰</text></svg>">
+
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
             color: #333;
+            -webkit-font-smoothing: antialiased;
+            user-select: none;
+            overflow-x: hidden;
         }
-
+        
+        .app-container {
+            min-height: 100vh;
+            max-width: 100vw;
+        }
+        
+        /* Install Banner */
+        .install-banner {
+            background: linear-gradient(135deg, #007AFF, #0056CC);
+            color: white;
+            padding: 12px 16px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        
+        .install-banner.show {
+            display: flex;
+        }
+        
+        .install-text {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .install-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .dismiss-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px;
+        }
+        
+        /* Header */
         .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            background: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
             position: sticky;
             top: 0;
             z-index: 100;
+            padding: 12px 16px;
         }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
+        
+        .header-top {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
         }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #1e3c72;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .controls {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .search-box {
-            padding: 0.5rem 1rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 25px;
-            outline: none;
-            transition: all 0.3s ease;
-            min-width: 200px;
-        }
-
-        .search-box:focus {
-            border-color: #1e3c72;
-            box-shadow: 0 0 10px rgba(30, 60, 114, 0.2);
-        }
-
-        .btn {
-            padding: 0.5rem 1rem;
+        
+        .menu-btn, .search-btn {
+            background: none;
             border: none;
-            border-radius: 20px;
+            padding: 8px;
+            border-radius: 50%;
             cursor: pointer;
+            transition: background 0.2s;
+            font-size: 18px;
+        }
+        
+        .menu-btn:hover, .search-btn:hover {
+            background: #f0f0f0;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .search-container {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+            max-height: 0;
+            overflow: hidden;
             transition: all 0.3s ease;
-            font-weight: 500;
-            text-decoration: none;
-            display: inline-block;
         }
-
-        .btn-primary {
-            background: #1e3c72;
-            color: white;
+        
+        .search-container.show {
+            max-height: 100px;
         }
-
-        .btn-primary:hover {
-            background: #2a5298;
-            transform: translateY(-2px);
+        
+        .search-input {
+            width: 100%;
+            background: #f8f8f8;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 16px;
+            font-size: 16px;
+            color: #333;
+            outline: none;
         }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        
+        /* Categories */
+        .categories {
+            background: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 12px 0;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
-
-        .btn:active {
-            transform: translateY(0);
+        
+        .categories::-webkit-scrollbar {
+            display: none;
         }
-
-        #installBtn {
-            background: linear-gradient(45deg, #8e44ad, #9b59b6) !important;
-            animation: pulse 2s infinite;
+        
+        .categories-list {
+            display: flex;
+            gap: 8px;
+            padding: 0 16px;
+            min-width: max-content;
         }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(142, 68, 173, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(142, 68, 173, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(142, 68, 173, 0); }
-        }
-
-        .status {
+        
+        .category-btn {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        .status.online {
-            color: #27ae60;
-        }
-
-        .stats {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #1e3c72;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        .categories {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .category-btn {
-            padding: 0.5rem 1rem;
-            border: 2px solid transparent;
-            background: transparent;
+            gap: 6px;
+            background: #f0f0f0;
+            border: none;
+            padding: 8px 16px;
             border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            font-size: 14px;
             font-weight: 500;
-            color: #1e3c72;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
         }
-
-        .category-btn:hover,
+        
         .category-btn.active {
-            background: #1e3c72;
+            background: #007AFF;
             color: white;
-            transform: translateY(-2px);
         }
-
-        .main-content {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 2rem;
+        
+        /* News List */
+        .news-list {
+            padding: 16px;
         }
-
-        .news-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
+        
         .news-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 16px;
             overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
             cursor: pointer;
         }
-
-        .news-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        
+        .news-card:active {
+            transform: scale(0.98);
         }
-
-        .news-image {
+        
+        .news-image-container {
+            position: relative;
             width: 100%;
             height: 200px;
-            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3rem;
-            color: #999;
+            font-size: 48px;
         }
-
-        .news-content {
-            padding: 1.5rem;
-        }
-
-        .news-category {
-            background: #1e3c72;
+        
+        .category-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0,0,0,0.7);
             color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
             font-weight: 500;
-            display: inline-block;
-            margin-bottom: 1rem;
         }
-
+        
+        .bookmark-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+        
+        .bookmark-btn.bookmarked {
+            color: #FFD700;
+        }
+        
+        .news-content {
+            padding: 16px;
+        }
+        
         .news-title {
-            font-size: 1.2rem;
+            font-size: 18px;
             font-weight: bold;
-            margin-bottom: 0.5rem;
-            line-height: 1.4;
-            color: #1e3c72;
+            color: #333;
+            margin-bottom: 8px;
+            line-height: 1.3;
         }
-
-        .news-description {
+        
+        .news-summary {
+            font-size: 14px;
             color: #666;
-            line-height: 1.6;
-            margin-bottom: 1rem;
+            line-height: 1.4;
+            margin-bottom: 12px;
         }
-
-        .news-meta {
+        
+        .news-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.9rem;
-            color: #888;
         }
-
-        .loading {
-            text-align: center;
-            padding: 3rem;
-            color: white;
-            font-size: 1.2rem;
+        
+        .news-stats {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: #999;
         }
-
-        .error {
-            text-align: center;
-            padding: 3rem;
-            color: #e74c3c;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            margin: 2rem;
+        
+        .share-btn {
+            background: none;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+            font-size: 16px;
         }
-
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .controls {
-                justify-content: center;
-            }
-            
-            .search-box {
-                min-width: 250px;
-            }
-            
-            .categories {
-                padding: 1rem;
-            }
-            
-            .main-content {
-                padding: 0 1rem;
-            }
+        
+        /* Side Menu */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
         }
-
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+        
+        .menu-overlay.show {
+            opacity: 1;
+            visibility: visible;
         }
-
-        @keyframes slideOutRight {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(100%);
-                opacity: 0;
-            }
+        
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 80%;
+            max-width: 300px;
+            height: 100%;
+            background: white;
+            transform: translateX(-100%);
+            transition: transform 0.3s;
+            z-index: 201;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        
+        .menu-overlay.show .side-menu {
+            transform: translateX(0);
         }
-
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
+        
+        .menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            background: #f8f8f8;
         }
-
-        @keyframes slideIn {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .news-card.new-article {
-            border: 2px solid #27ae60;
-            box-shadow: 0 8px 32px rgba(39, 174, 96, 0.2);
-        }
-
-        .news-card.new-article::before {
-            content: "🆕 NOU";
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #27ae60;
-            color: white;
-            padding: 0.25rem 0.5rem;
-            border-radius: 10px;
-            font-size: 0.7rem;
+        
+        .menu-title {
+            font-size: 18px;
             font-weight: bold;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .menu-item:hover {
+            background: #f0f0f0;
+        }
+        
+        .menu-item.active {
+            background: #e6f3ff;
+            color: #007AFF;
+        }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .categories-list {
+                padding: 0 12px;
+            }
+            
+            .news-list {
+                padding: 12px;
+            }
+            
+            .news-card {
+                margin-bottom: 12px;
+            }
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">
-                📰 NewsApp România
+    <div class="app-container">
+        <!-- Install Banner -->
+        <div class="install-banner" id="installBanner">
+            <div class="install-text">📱 Instalează aplicația pentru o experiență mai bună!</div>
+            <div>
+                <button class="install-btn" id="installBtn">Instalează</button>
+                <button class="dismiss-btn" id="dismissBtn">×</button>
             </div>
-            <div class="controls">
-                <input type="text" class="search-box" placeholder="🔍 Caută știri..." id="searchInput">
-                <button class="btn btn-primary" id="refreshBtn">↻ Reîmprospătează</button>
-                <button class="btn" id="notificationBtn" style="background: #27ae60; color: white;">🔔 Notificări</button>
-                <div class="status online" id="status">
-                    ✅ Online
+        </div>
+
+        <!-- Header -->
+        <header class="header">
+            <div class="header-top">
+                <button class="menu-btn" id="menuBtn">☰</button>
+                <h1 class="header-title">Știri</h1>
+                <button class="search-btn" id="searchBtn">🔍</button>
+            </div>
+            <div class="search-container" id="searchContainer">
+                <input type="text" class="search-input" id="searchInput" placeholder="Caută știri...">
+            </div>
+        </header>
+
+        <!-- Categories -->
+        <div class="categories">
+            <div class="categories-list" id="categoriesList">
+                <button class="category-btn active" data-category="all">📰 Toate</button>
+                <button class="category-btn" data-category="politica">🏛️ Politică</button>
+                <button class="category-btn" data-category="sport">⚽ Sport</button>
+                <button class="category-btn" data-category="tech">💻 Tech</button>
+                <button class="category-btn" data-category="economie">💰 Economie</button>
+                <button class="category-btn" data-category="entertainment">🎬 Entertainment</button>
+            </div>
+        </div>
+
+        <!-- News List -->
+        <main class="news-list" id="newsList">
+            <div class="loading">Încarcă știrile...</div>
+        </main>
+
+        <!-- Side Menu -->
+        <div class="menu-overlay" id="menuOverlay">
+            <div class="side-menu">
+                <div class="menu-header">
+                    <h2 class="menu-title">Meniu</h2>
+                    <button class="close-btn" id="closeMenuBtn">×</button>
+                </div>
+                <div class="menu-items">
+                    <button class="menu-item active">
+                        <span class="menu-item-icon">📰</span>
+                        <span class="menu-item-text">Toate știrile</span>
+                    </button>
+                    <button class="menu-item">
+                        <span class="menu-item-icon">⭐</span>
+                        <span class="menu-item-text">Favorite</span>
+                    </button>
+                    <button class="menu-item">
+                        <span class="menu-item-icon">📖</span>
+                        <span class="menu-item-text">Citite recent</span>
+                    </button>
+                    <button class="menu-item">
+                        <span class="menu-item-icon">⚙️</span>
+                        <span class="menu-item-text">Setări</span>
+                    </button>
+                    <button class="menu-item">
+                        <span class="menu-item-icon">ℹ️</span>
+                        <span class="menu-item-text">Despre</span>
+                    </button>
                 </div>
             </div>
-        </div>
-    </header>
-
-    <div class="stats">
-        <div class="stat">
-            <div class="stat-number" id="totalNews">0</div>
-            <div class="stat-label">Știri Totale</div>
-        </div>
-        <div class="stat">
-            <div class="stat-number" id="displayedNews">0</div>
-            <div class="stat-label">Afișate</div>
-        </div>
-        <div class="stat">
-            <div class="stat-number" id="savedNews">0</div>
-            <div class="stat-label">Salvate</div>
-        </div>
-        <div class="stat">
-            <div class="stat-number" id="lastUpdate">--:--</div>
-            <div class="stat-label">Actualizat</div>
-        </div>
-    </div>
-
-    <div class="categories">
-        <button class="category-btn active" data-category="all">📰 Toate</button>
-        <button class="category-btn" data-category="breaking">🚨 Breaking</button>
-        <button class="category-btn" data-category="politics">🏛️ Politică</button>
-        <button class="category-btn" data-category="business">💼 Economie</button>
-        <button class="category-btn" data-category="social">👥 Social</button>
-        <button class="category-btn" data-category="sports">⚽ Sport</button>
-        <button class="category-btn" data-category="technology">💻 Tech</button>
-    </div>
-
-    <div class="main-content">
-        <div id="newsContainer">
-            <div class="loading" id="loading">📡 Se încarcă știrile...</div>
         </div>
     </div>
 
     <script>
-        class NewsApp {
-            constructor() {
-                this.news = [];
-                this.filteredNews = [];
-                this.currentCategory = 'all';
-                this.savedNews = JSON.parse(localStorage.getItem('savedNews') || '[]');
-                this.lastUpdateTime = localStorage.getItem('lastUpdateTime') || null;
-                this.autoRefreshInterval = null;
-                this.notificationsEnabled = false;
-                this.serviceWorker = null;
-                this.deferredPrompt = null;
-                this.init();
+        // Sample news data - Verifică dacă datele se încarcă
+        console.log('Aplicația se încarcă...');
+        
+        const newsData = [
+            {
+                id: '1',
+                title: 'Noile tehnologii în construcții - Viitorul industriei',
+                summary: 'Descoperă cum tehnologiile moderne transformă industria construcțiilor și ce înseamnă acest lucru pentru viitor.',
+                category: 'tech',
+                image: '🏗️',
+                time: '2 ore',
+                views: '1.2k',
+                bookmarked: false
+            },
+            {
+                id: '2',
+                title: 'Creșterea economică în sectorul energetic din România',
+                summary: 'Analiza detaliată a performanțelor sectorului energetic și perspectivele de dezvoltare.',
+                category: 'economie',
+                image: '⚡',
+                time: '4 ore',
+                views: '856',
+                bookmarked: false
+            },
+            {
+                id: '3',
+                title: 'Sportivii români la competițiile internaționale',
+                summary: 'Rezultate excepționale obținute de reprezentanții României în competițiile recente.',
+                category: 'sport',
+                image: '🏆',
+                time: '6 ore',
+                views: '2.1k',
+                bookmarked: true
+            },
+            {
+                id: '4',
+                title: 'Politici noi pentru susținerea mediului de afaceri',
+                summary: 'Guvernul anunță noi măsuri pentru sprijinirea întreprinderilor mici și mijlocii.',
+                category: 'politica',
+                image: '🏛️',
+                time: '8 ore',
+                views: '967',
+                bookmarked: false
+            },
+            {
+                id: '5',
+                title: 'Premierele cinematografice ale acestei săptămâni',
+                summary: 'Lista completă a filmelor care se lansează în cinematografele din țară.',
+                category: 'entertainment',
+                image: '🎬',
+                time: '12 ore',
+                views: '743',
+                bookmarked: false
             }
+        ];
 
-            async init() {
-                await this.registerServiceWorker();
-                this.setupPWAInstallPrompt();
-                this.requestNotificationPermission();
-                this.setupEventListeners();
-                this.loadNews();
-                this.updateStats();
-                this.startAutoRefresh();
-            }
+        // App state
+        let currentCategory = 'all';
+        let searchQuery = '';
+        let bookmarkedNews = JSON.parse(localStorage.getItem('bookmarkedNews') || '[]');
+        let deferredPrompt;
 
-            async registerServiceWorker() {
-                if ('serviceWorker' in navigator) {
-                    try {
-                        // Inline service worker pentru simplitate
-                        const swCode = `
-                            const CACHE_NAME = 'newsapp-v1';
-                            const urlsToCache = [
-                                '/',
-                                '/index.html'
-                            ];
+        // DOM elements
+        const menuBtn = document.getElementById('menuBtn');
+        const searchBtn = document.getElementById('searchBtn');
+        const searchContainer = document.getElementById('searchContainer');
+        const searchInput = document.getElementById('searchInput');
+        const categoriesList = document.getElementById('categoriesList');
+        const newsList = document.getElementById('newsList');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const installBanner = document.getElementById('installBanner');
+        const installBtn = document.getElementById('installBtn');
+        const dismissBtn = document.getElementById('dismissBtn');
 
-                            self.addEventListener('install', event => {
-                                event.waitUntil(
-                                    caches.open(CACHE_NAME)
-                                        .then(cache => cache.addAll(urlsToCache))
-                                );
-                                self.skipWaiting();
-                            });
-
-                            self.addEventListener('activate', event => {
-                                event.waitUntil(self.clients.claim());
-                            });
-
-                            self.addEventListener('fetch', event => {
-                                event.respondWith(
-                                    caches.match(event.request)
-                                        .then(response => response || fetch(event.request))
-                                        .catch(() => {
-                                            // Fallback pentru când nu avem conexiune
-                                            if (event.request.destination === 'document') {
-                                                return caches.match('/');
-                                            }
-                                        })
-                                );
-                            });
-
-                            self.addEventListener('notificationclick', event => {
-                                event.notification.close();
-                                event.waitUntil(
-                                    clients.matchAll({type: 'window'}).then(clientList => {
-                                        for (let client of clientList) {
-                                            if (client.url === '/' && 'focus' in client) {
-                                                return client.focus();
-                                            }
-                                        }
-                                        if (clients.openWindow) {
-                                            return clients.openWindow('/');
-                                        }
-                                    })
-                                );
-                            });
-
-                            self.addEventListener('push', event => {
-                                if (event.data) {
-                                    try {
-                                        const data = event.data.json();
-                                        const options = {
-                                            body: data.body,
-                                            icon: '/icon-192.png',
-                                            badge: '/badge-72.png',
-                                            vibrate: [100, 50, 100],
-                                            data: data.url,
-                                            actions: [
-                                                {
-                                                    action: 'view',
-                                                    title: 'Vezi știrile'
-                                                }
-                                            ]
-                                        };
-                                        event.waitUntil(
-                                            self.registration.showNotification(data.title, options)
-                                        );
-                                    } catch (e) {
-                                        console.log('Push notification error:', e);
-                                    }
-                                }
-                            });
-                        `;
-                        
-                        const blob = new Blob([swCode], { type: 'application/javascript' });
-                        const swUrl = URL.createObjectURL(blob);
-                        
-                        const registration = await navigator.serviceWorker.register(swUrl);
-                        this.serviceWorker = registration;
-                        console.log('Service Worker registered successfully');
-                        
-                        // Cleanup blob URL after registration
-                        URL.revokeObjectURL(swUrl);
-                        
-                        // Wait for service worker to be ready
-                        await navigator.serviceWorker.ready;
-                        
-                    } catch (error) {
-                        console.log('Service Worker registration failed:', error);
-                    }
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM încărcat, inițializez aplicația...');
+            renderNews();
+            setupEventListeners();
+            
+            // Verifică dacă elementele există
+            console.log('Menu button:', menuBtn);
+            console.log('Search button:', searchBtn);
+            console.log('News list:', newsList);
+            
+            // Înlocuiește mesajul de loading cu o verificare
+            setTimeout(() => {
+                if (newsList.innerHTML.includes('Încarcă știrile...')) {
+                    console.log('Forțez rendering-ul știrilor...');
+                    renderNews();
                 }
-            }
+            }, 1000);
+        });
 
-            setupPWAInstallPrompt() {
-                window.addEventListener('beforeinstallprompt', (e) => {
+        // Event listeners - Simplificate și reparate
+        function setupEventListeners() {
+            console.log('Setting up event listeners...');
+            
+            // Menu functionality
+            if (menuBtn && menuOverlay) {
+                menuBtn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    this.deferredPrompt = e;
-                    this.showInstallButton();
-                });
-
-                window.addEventListener('appinstalled', () => {
-                    this.hideInstallButton();
-                    this.showNotification('📱 Aplicația a fost instalată!', 'NewsApp România este acum disponibilă pe ecranul principal.');
+                    console.log('Menu button clicked');
+                    menuOverlay.classList.toggle('show');
                 });
             }
 
-            showInstallButton() {
-                const installBtn = document.createElement('button');
-                installBtn.id = 'installBtn';
-                installBtn.className = 'btn';
-                installBtn.innerHTML = '📱 Instalează App';
-                installBtn.style.cssText = `
-                    background: linear-gradient(45deg, #8e44ad, #9b59b6);
-                    color: white;
-                    margin-left: 0.5rem;
-                `;
-                
-                installBtn.addEventListener('click', () => {
-                    if (this.deferredPrompt) {
-                        this.deferredPrompt.prompt();
-                        this.deferredPrompt.userChoice.then((choiceResult) => {
-                            if (choiceResult.outcome === 'accepted') {
-                                console.log('User accepted the install prompt');
-                            }
-                            this.deferredPrompt = null;
+            if (closeMenuBtn && menuOverlay) {
+                closeMenuBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    menuOverlay.classList.remove('show');
+                });
+            }
+
+            if (menuOverlay) {
+                menuOverlay.addEventListener('click', (e) => {
+                    if (e.target === menuOverlay) {
+                        menuOverlay.classList.remove('show');
+                    }
+                });
+            }
+
+            // Search functionality
+            if (searchBtn && searchContainer) {
+                searchBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log('Search button clicked');
+                    searchContainer.classList.toggle('show');
+                    if (searchContainer.classList.contains('show') && searchInput) {
+                        searchInput.focus();
+                    }
+                });
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    searchQuery = e.target.value.toLowerCase();
+                    console.log('Search query:', searchQuery);
+                    renderNews();
+                });
+            }
+
+            // Categories functionality
+            if (categoriesList) {
+                categoriesList.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('category-btn')) {
+                        console.log('Category clicked:', e.target.dataset.category);
+                        
+                        // Update active category
+                        document.querySelectorAll('.category-btn').forEach(btn => {
+                            btn.classList.remove('active');
                         });
-                    }
-                });
-
-                const controls = document.querySelector('.controls');
-                if (controls && !document.getElementById('installBtn')) {
-                    controls.appendChild(installBtn);
-                }
-            }
-
-            hideInstallButton() {
-                const installBtn = document.getElementById('installBtn');
-                if (installBtn) {
-                    installBtn.remove();
-                }
-            }
-
-            async requestNotificationPermission() {
-                if ('Notification' in window) {
-                    const permission = await Notification.requestPermission();
-                    this.notificationsEnabled = permission === 'granted';
-                    
-                    if (this.notificationsEnabled) {
-                        this.showNotification(
-                            '🔔 Notificări activate!', 
-                            'Vei primi alerte pentru știri noi la fiecare 30 de minute.'
-                        );
+                        e.target.classList.add('active');
                         
-                        // Update button state
-                        const notifBtn = document.getElementById('notificationBtn');
-                        if (notifBtn) {
-                            notifBtn.innerHTML = '🔔 Active';
-                            notifBtn.style.background = '#27ae60';
-                        }
-                    } else {
-                        const notifBtn = document.getElementById('notificationBtn');
-                        if (notifBtn) {
-                            notifBtn.innerHTML = '🔕 Blocate';
-                            notifBtn.style.background = '#e74c3c';
-                        }
+                        currentCategory = e.target.dataset.category;
+                        renderNews();
                     }
-                }
-            }
-
-            showNotification(title, body, options = {}) {
-                if (this.notificationsEnabled) {
-                    const defaultOptions = {
-                        body: body,
-                        icon: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"%3E%3Crect width="180" height="180" fill="%231e3c72"/%3E%3Ctext x="90" y="130" font-size="90" text-anchor="middle" fill="white"%3E📰%3C/text%3E%3C/svg%3E',
-                        badge: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"%3E%3Crect width="72" height="72" fill="%231e3c72"/%3E%3Ctext x="36" y="50" font-size="36" text-anchor="middle" fill="white"%3E📰%3C/text%3E%3C/svg%3E',
-                        vibrate: [200, 100, 200],
-                        tag: 'news-update',
-                        requireInteraction: false,
-                        timestamp: Date.now(),
-                        ...options
-                    };
-
-                    // Remove actions from simple notifications
-                    delete defaultOptions.actions;
-
-                    try {
-                        if (this.serviceWorker && 'showNotification' in this.serviceWorker) {
-                            // Use service worker for persistent notifications with actions
-                            const persistentOptions = {
-                                ...defaultOptions,
-                                actions: [
-                                    {
-                                        action: 'view',
-                                        title: 'Vezi știrile'
-                                    }
-                                ]
-                            };
-                            this.serviceWorker.showNotification(title, persistentOptions);
-                        } else {
-                            // Fallback to regular notifications (without actions)
-                            const notification = new Notification(title, defaultOptions);
-                            
-                            notification.onclick = () => {
-                                window.focus();
-                                notification.close();
-                                if (options.onclick) options.onclick();
-                            };
-
-                            // Auto close after 8 seconds
-                            setTimeout(() => {
-                                notification.close();
-                            }, 8000);
-                        }
-                    } catch (error) {
-                        console.log('Notification error:', error);
-                        // Fallback to simple notification without advanced features
-                        const simpleNotification = new Notification(title, {
-                            body: body,
-                            icon: defaultOptions.icon
-                        });
-                        
-                        simpleNotification.onclick = () => {
-                            window.focus();
-                            simpleNotification.close();
-                        };
-                    }
-                }
-            }
-
-            startAutoRefresh() {
-                // Refresh every 30 minutes (1800000 ms)
-                this.autoRefreshInterval = setInterval(() => {
-                    this.checkForNewNews();
-                }, 30 * 60 * 1000);
-                
-                // Also check 30 seconds after page load for demo
-                setTimeout(() => {
-                    this.checkForNewNews();
-                }, 30000);
-            }
-
-            async checkForNewNews() {
-                try {
-                    const statusEl = document.getElementById('status');
-                    if (statusEl) {
-                        statusEl.innerHTML = '🔄 Verifică știri noi...';
-                        statusEl.className = 'status';
-                    }
-
-                    const previousNewsCount = this.news.length;
-                    const newNews = this.generateSampleNews();
-                    
-                    // Simulate getting 1-3 new articles
-                    const additionalNews = this.generateAdditionalNews(Math.floor(Math.random() * 3) + 1);
-                    const allNews = [...newNews, ...additionalNews];
-                    
-                    const newArticlesCount = allNews.length - previousNewsCount;
-                    
-                    if (newArticlesCount > 0) {
-                        this.news = allNews;
-                        this.filteredNews = this.currentCategory === 'all' ? [...this.news] : 
-                            this.news.filter(article => article.category === this.currentCategory);
-                        
-                        this.renderNews();
-                        this.updateStats();
-                        this.updateLastUpdateTime();
-                        
-                        // Show notification for new articles
-                        this.showNotification(
-                            `📰 ${newArticlesCount} știri noi!`,
-                            `Au fost găsite ${newArticlesCount} articole noi. Click pentru a vedea.`,
-                            {
-                                onclick: () => window.focus()
-                            }
-                        );
-                        
-                        // Flash effect for new articles indicator
-                        this.flashNewArticlesIndicator(newArticlesCount);
-                    }
-                    
-                    if (statusEl) {
-                        statusEl.innerHTML = '✅ Online';
-                        statusEl.className = 'status online';
-                    }
-                    
-                } catch (error) {
-                    console.error('Error checking for new news:', error);
-                }
-            }
-
-            generateAdditionalNews(count) {
-                const additionalTitles = [
-                    "BREAKING: Eveniment important în București chiar acum",
-                    "URGENT: Decizie de ultimă oră a autorităților",
-                    "LIVE: Conferință de presă extraordinară în desfășurare",
-                    "EXCLUSIV: Informații de ultima oră din surse oficiale",
-                    "UPDATE: Situație în dezvoltare la nivel național",
-                    "ALERT: Anunț important pentru cetățeni",
-                    "FLASH: Vești de ultimă oră din capitală",
-                    "BREAKING: Dezvoltări rapide în dosarul economic",
-                    "URGENT: Măsuri de urgență anunțate oficial",
-                    "LIVE: Urmărește în timp real evenimentele"
-                ];
-                
-                const categories = ['breaking', 'politics', 'business', 'social'];
-                const currentMaxId = Math.max(...this.news.map(n => n.id), 0);
-                
-                return Array.from({length: count}, (_, index) => ({
-                    id: currentMaxId + index + 1,
-                    title: additionalTitles[Math.floor(Math.random() * additionalTitles.length)],
-                    description: `Acest articol conține informații de ultimă oră actualizate în timp real. Detaliile sunt verificate și confirmate de echipa noastră de redacție.`,
-                    category: categories[Math.floor(Math.random() * categories.length)],
-                    publishedAt: new Date(),
-                    source: ['Agerpres', 'Mediafax', 'HotNews', 'Digi24'][Math.floor(Math.random() * 4)],
-                    isSaved: false,
-                    isNew: true
-                }));
-            }
-
-            flashNewArticlesIndicator(count) {
-                // Create floating notification
-                const notification = document.createElement('div');
-                notification.innerHTML = `📰 ${count} articole noi!`;
-                notification.style.cssText = `
-                    position: fixed;
-                    top: 80px;
-                    right: 20px;
-                    background: linear-gradient(45deg, #27ae60, #2ecc71);
-                    color: white;
-                    padding: 1rem 2rem;
-                    border-radius: 25px;
-                    font-weight: bold;
-                    box-shadow: 0 4px 20px rgba(39, 174, 96, 0.4);
-                    z-index: 1000;
-                    animation: slideInRight 0.5s ease-out;
-                    cursor: pointer;
-                `;
-                
-                document.body.appendChild(notification);
-                
-                // Remove after 5 seconds
-                setTimeout(() => {
-                    notification.style.animation = 'slideOutRight 0.5s ease-in forwards';
-                    setTimeout(() => {
-                        if (notification.parentNode) {
-                            notification.parentNode.removeChild(notification);
-                        }
-                    }, 500);
-                }, 5000);
-                
-                // Click to dismiss
-                notification.addEventListener('click', () => {
-                    notification.style.animation = 'slideOutRight 0.5s ease-in forwards';
-                    setTimeout(() => {
-                        if (notification.parentNode) {
-                            notification.parentNode.removeChild(notification);
-                        }
-                    }, 500);
                 });
             }
 
-            setupEventListeners() {
-                // Refresh button
-                document.getElementById('refreshBtn').addEventListener('click', () => {
-                    this.loadNews();
-                });
+            console.log('Event listeners set up successfully!');
+        }
 
-                // Notification button
-                document.getElementById('notificationBtn').addEventListener('click', () => {
-                    this.toggleNotifications();
-                });
+        // Render news - Funcție îmbunătățită cu debugging
+        function renderNews() {
+            console.log('Rendering news...', {
+                currentCategory,
+                searchQuery,
+                totalNews: newsData.length
+            });
+            
+            const filteredNews = newsData.filter(news => {
+                const matchesCategory = currentCategory === 'all' || news.category === currentCategory;
+                const matchesSearch = searchQuery === '' || 
+                    news.title.toLowerCase().includes(searchQuery) ||
+                    news.summary.toLowerCase().includes(searchQuery);
+                return matchesCategory && matchesSearch;
+            });
 
-                // Search functionality
-                document.getElementById('searchInput').addEventListener('input', (e) => {
-                    this.searchNews(e.target.value);
-                });
+            console.log('Filtered news:', filteredNews.length);
 
-                // Category buttons
-                document.querySelectorAll('.category-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        this.setActiveCategory(e.target);
-                        this.filterByCategory(e.target.dataset.category);
-                    });
-                });
+            if (filteredNews.length === 0) {
+                newsList.innerHTML = '<div class="loading">Nu au fost găsite știri pentru această căutare.</div>';
+                return;
             }
 
-            toggleNotifications() {
-                const btn = document.getElementById('notificationBtn');
-                if (!this.notificationsEnabled) {
-                    this.requestNotificationPermission().then(() => {
-                        if (this.notificationsEnabled) {
-                            btn.innerHTML = '🔔 Activate';
-                            btn.style.background = '#27ae60';
-                        } else {
-                            btn.innerHTML = '🔕 Blocate';
-                            btn.style.background = '#e74c3c';
-                        }
-                    });
-                } else {
-                    // Toggle visual state
-                    if (btn.innerHTML.includes('🔔')) {
-                        btn.innerHTML = '🔕 Dezactivate';
-                        btn.style.background = '#e74c3c';
-                        this.notificationsEnabled = false;
-                    } else {
-                        btn.innerHTML = '🔔 Active';
-                        btn.style.background = '#27ae60';
-                        this.notificationsEnabled = true;
-                    }
-                }
-            }
-
-            async loadNews() {
-                try {
-                    const loadingEl = document.getElementById('loading');
-                    const statusEl = document.getElementById('status');
-                    
-                    if (loadingEl) loadingEl.style.display = 'block';
-                    if (statusEl) {
-                        statusEl.innerHTML = '🔄 Se încarcă...';
-                        statusEl.className = 'status';
-                    }
-                    
-                    // Simulate API call with sample Romanian news data
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    
-                    this.news = this.generateSampleNews();
-                    this.filteredNews = [...this.news];
-                    
-                    this.renderNews();
-                    this.updateStats();
-                    this.updateLastUpdateTime();
-                    
-                    if (statusEl) {
-                        statusEl.innerHTML = '✅ Online';
-                        statusEl.className = 'status online';
-                    }
-                    if (loadingEl) loadingEl.style.display = 'none';
-                    
-                } catch (error) {
-                    console.error('Error loading news:', error);
-                    this.showError('Eroare la încărcarea știrilor');
-                }
-            }
-
-            generateSampleNews() {
-                const newsData = [
-                    {
-                        title: "Noi măsuri economice anunțate de guvern pentru 2025",
-                        description: "Guvernul României a anunțat un pachet de măsuri economice pentru stimularea creșterii în 2025, incluzând reduceri de taxe pentru IMM-uri și investiții în infrastructură.",
-                        category: "business",
-                        source: "Agerpres",
-                        url: "https://www.agerpres.ro",
-                        fullContent: "Guvernul României a aprobat astăzi un pachet comprehensiv de măsuri economice destinat stimulării creșterii economice în anul 2025. Pachetul include reduceri semnificative de taxe pentru întreprinderile mici și mijlocii, investiții masive în infrastructură și programe de sprijin pentru antreprenoriat. Potrivit ministrului Economiei, aceste măsuri vor genera aproximativ 100.000 de locuri de muncă noi și vor crește PIB-ul cu 3.5% în următorii doi ani. Reducerile de taxe se vor aplica începând cu 1 aprilie 2025 și vor beneficia peste 500.000 de companii din România."
-                    },
-                    {
-                        title: "România câștigă medalia de aur la Campionatul European",
-                        description: "Echipa națională de fotbal feminin a României a cucerit medalia de aur la Campionatul European, într-o finală spectaculoasă.",
-                        category: "sports",
-                        source: "ProTV",
-                        url: "https://stirileprotv.ro",
-                        fullContent: "Într-o seară de neuitat pentru fotbalul românesc, echipa națională feminină a câștigat medalia de aur la Campionatul European, învingând Franța cu scorul de 2-1 în finală. Golurile au fost marcate de Ioana Popescu în minutul 23 și Alexandra Marinescu în minutul 67, în timp ce Franța a redus din diferență prin Dubois în minutul 85. Antrenorul Mircea Rednic a declarat că aceasta este cea mai mare performanță din cariera sa. Echipa se va întoarce mâine în țară unde va fi primită cu onoruri la Palatul Victoria."
-                    },
-                    {
-                        title: "Tehnologie revoluționară implementată în spitalele din țară",
-                        description: "Sistemul medical românesc adoptă o nouă tehnologie de diagnostic AI care poate detecta bolile cu o precizie de 95%.",
-                        category: "technology",
-                        source: "HotNews",
-                        url: "https://www.hotnews.ro",
-                        fullContent: "Ministerul Sănătății a anunțat implementarea unui sistem revoluționar de diagnostic bazat pe inteligență artificială în 50 de spitale din România. Tehnologia, dezvoltată în parteneriat cu o companie românească de IT, poate detecta boli cardiovasculare, cancer și alte afecțiuni cu o precizie de 95%. Sistemul analizează imagini medicale în timp real și oferă diagnostice în mai puțin de 5 minute. Primul spital care va beneficia de această tehnologie este Spitalul Universitar din București, urmând ca până la sfârșitul anului să fie implementată în toate spitalele județene."
-                    },
-                    {
-                        title: "Proteste în București pentru îmbunătățirea infrastructurii",
-                        description: "Mii de cetățeni au ieșit în strada pentru a cere autorităților îmbunătățirea infrastructurii de transport public.",
-                        category: "social",
-                        source: "Digi24",
-                        url: "https://www.digi24.ro",
-                        fullContent: "Aproximativ 5.000 de cetățeni s-au adunat astăzi în Piața Victoriei pentru a protesta pașnic în favoarea îmbunătățirii infrastructurii de transport public din București. Manifestanții cer extinderea rețelei de metrou, modernizarea autobuzelor și tramvaielor, și construirea de noi piste de biciclete. Primarul Capitalei, Nicușor Dan, a ieșit să discute cu protestatarii și a promis că va prezenta în următoarele două săptămâni un plan concret de investiții în transportul public. Protestul s-a desfășurat fără incidente, participanții fiind foarte organizați și pașnici."
-                    },
-                    {
-                        title: "Investiții masive în energia regenerabilă",
-                        description: "România va investi 2 miliarde de euro în parcuri eoliene și solare până în 2027, devenind lider regional în energie verde.",
-                        category: "business",
-                        source: "Mediafax",
-                        url: "https://www.mediafax.ro",
-                        fullContent: "Guvernul României a semnat astăzi contracte în valoare de 2 miliarde de euro pentru dezvoltarea de parcuri eoliene și solare pe teritoriul național. Proiectele vor fi finalizate până în 2027 și vor genera 3.000 MW de energie verde, suficient pentru alimentarea a 2 milioane de gospodării. România devine astfel liderul regional în tranziția către energia regenerabilă. Ministrul Energiei a declarat că aceste investiții vor crea 15.000 de locuri de muncă și vor reduce dependența de importurile de energie cu 40%. Primul parc solar va fi construit în județul Constanța și va fi operațional din 2026."
-                    }
-                ];
-
-                return newsData.map((article, index) => ({
-                    id: index + 1,
-                    title: article.title,
-                    description: article.description,
-                    category: article.category,
-                    publishedAt: new Date(Date.now() - Math.random() * 86400000 * 7),
-                    source: article.source,
-                    url: article.url,
-                    fullContent: article.fullContent,
-                    isSaved: this.savedNews.includes(index + 1)
-                }));
-            }
-
-            renderNews() {
-                const container = document.getElementById('newsContainer');
-                
-                if (this.filteredNews.length === 0) {
-                    container.innerHTML = '<div class="error">Nu au fost găsite știri pentru criteriile selectate.</div>';
-                    return;
-                }
-
-                const newsHTML = this.filteredNews.map(article => `
-                    <div class="news-card ${article.isNew ? 'new-article' : ''}" onclick="app.openArticle(${article.id})" style="position: relative;">
-                        <div class="news-image">📰</div>
-                        <div class="news-content">
-                            <span class="news-category">${this.getCategoryName(article.category)}</span>
-                            <h3 class="news-title">${article.title}</h3>
-                            <p class="news-description">${article.description}</p>
-                            <div class="news-meta">
-                                <span>${article.source}</span>
-                                <span>${this.formatDate(article.publishedAt)}</span>
-                                <button class="btn ${article.isSaved ? 'btn-primary' : ''}" 
-                                        onclick="event.stopPropagation(); app.toggleSave(${article.id})"
-                                        style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
-                                    ${article.isSaved ? '💾 Salvat' : '💾 Salvează'}
-                                </button>
+            const newsHTML = filteredNews.map(news => `
+                <article class="news-card" onclick="openNews('${news.id}')">
+                    <div class="news-image-container">
+                        <div style="font-size: 64px;">${news.image}</div>
+                        <div class="category-badge">${getCategoryLabel(news.category)}</div>
+                        <button class="bookmark-btn ${bookmarkedNews.includes(news.id) ? 'bookmarked' : ''}" 
+                                onclick="event.stopPropagation(); toggleBookmark('${news.id}')">
+                            ${bookmarkedNews.includes(news.id) ? '★' : '☆'}
+                        </button>
+                    </div>
+                    <div class="news-content">
+                        <h2 class="news-title">${news.title}</h2>
+                        <p class="news-summary">${news.summary}</p>
+                        <div class="news-footer">
+                            <div class="news-stats">
+                                <span>⏰ ${news.time}</span>
+                                <span>👁️ ${news.views}</span>
                             </div>
+                            <button class="share-btn" onclick="event.stopPropagation(); shareNews('${news.id}')">📤</button>
                         </div>
                     </div>
-                `).join('');
+                </article>
+            `).join('');
+            
+            newsList.innerHTML = newsHTML;
+            console.log('News rendered successfully!');
+        }
 
-                container.innerHTML = `<div class="news-grid">${newsHTML}</div>`;
+        // Helper functions
+        function getCategoryLabel(category) {
+            const labels = {
+                'politica': 'Politică',
+                'sport': 'Sport',
+                'tech': 'Tech',
+                'economie': 'Economie',
+                'entertainment': 'Entertainment'
+            };
+            return labels[category] || 'General';
+        }
+
+        function toggleBookmark(newsId) {
+            console.log('Toggle bookmark for:', newsId);
+            const index = bookmarkedNews.indexOf(newsId);
+            if (index > -1) {
+                bookmarkedNews.splice(index, 1);
+            } else {
+                bookmarkedNews.push(newsId);
             }
-
-            getCategoryName(category) {
-                const names = {
-                    'breaking': '🚨 Breaking',
-                    'politics': '🏛️ Politică',
-                    'business': '💼 Economie',
-                    'social': '👥 Social',
-                    'sports': '⚽ Sport',
-                    'technology': '💻 Tech'
-                };
-                return names[category] || '📰 General';
+            
+            try {
+                localStorage.setItem('bookmarkedNews', JSON.stringify(bookmarkedNews));
+            } catch (e) {
+                console.log('LocalStorage not available:', e);
             }
+            
+            renderNews();
+        }
 
-            formatDate(date) {
-                const now = new Date();
-                const diff = now - date;
-                const hours = Math.floor(diff / (1000 * 60 * 60));
-                
-                if (hours < 1) return 'Acum';
-                if (hours < 24) return `Acum ${hours}h`;
-                
-                const days = Math.floor(hours / 24);
-                if (days < 7) return `Acum ${days} zile`;
-                
-                return date.toLocaleDateString('ro-RO');
-            }
-
-            setActiveCategory(button) {
-                document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-            }
-
-            filterByCategory(category) {
-                this.currentCategory = category;
-                if (category === 'all') {
-                    this.filteredNews = [...this.news];
-                } else {
-                    this.filteredNews = this.news.filter(article => article.category === category);
-                }
-                this.renderNews();
-                this.updateStats();
-            }
-
-            searchNews(query) {
-                if (!query.trim()) {
-                    this.filterByCategory(this.currentCategory);
-                    return;
-                }
-
-                const searchTerm = query.toLowerCase();
-                this.filteredNews = this.news.filter(article =>
-                    article.title.toLowerCase().includes(searchTerm) ||
-                    article.description.toLowerCase().includes(searchTerm)
-                );
-                
-                this.renderNews();
-                this.updateStats();
-            }
-
-            toggleSave(articleId) {
-                const article = this.news.find(a => a.id === articleId);
-                if (!article) return;
-
-                if (article.isSaved) {
-                    article.isSaved = false;
-                    this.savedNews = this.savedNews.filter(id => id !== articleId);
-                } else {
-                    article.isSaved = true;
-                    this.savedNews.push(articleId);
-                }
-
-                localStorage.setItem('savedNews', JSON.stringify(this.savedNews));
-                this.renderNews();
-                this.updateStats();
-            }
-
-            openArticle(articleId) {
-                const article = this.news.find(a => a.id === articleId);
-                if (!article) return;
-
-                // Create modal overlay
-                const modal = document.createElement('div');
-                modal.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0,0,0,0.8);
-                    backdrop-filter: blur(5px);
-                    z-index: 9999;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    padding: 2rem;
-                    animation: fadeIn 0.3s ease-out;
-                `;
-
-                // Create modal content
-                const modalContent = document.createElement('div');
-                modalContent.style.cssText = `
-                    background: white;
-                    border-radius: 15px;
-                    max-width: 800px;
-                    max-height: 80vh;
-                    overflow-y: auto;
-                    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-                    position: relative;
-                    animation: slideIn 0.3s ease-out;
-                `;
-
-                modalContent.innerHTML = `
-                    <div style="padding: 2rem;">
-                        <button id="closeModal" style="
-                            position: absolute;
-                            top: 1rem;
-                            right: 1rem;
-                            background: #e74c3c;
-                            color: white;
-                            border: none;
-                            border-radius: 50%;
-                            width: 40px;
-                            height: 40px;
-                            cursor: pointer;
-                            font-size: 1.2rem;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                        ">×</button>
-                        
-                        <div style="margin-bottom: 1rem;">
-                            <span style="
-                                background: #1e3c72;
-                                color: white;
-                                padding: 0.5rem 1rem;
-                                border-radius: 20px;
-                                font-size: 0.9rem;
-                                font-weight: 500;
-                            ">${this.getCategoryName(article.category)}</span>
-                        </div>
-                        
-                        <h1 style="
-                            font-size: 1.8rem;
-                            color: #1e3c72;
-                            margin-bottom: 1rem;
-                            line-height: 1.3;
-                        ">${article.title}</h1>
-                        
-                        <div style="
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: center;
-                            margin-bottom: 2rem;
-                            padding-bottom: 1rem;
-                            border-bottom: 2px solid #eee;
-                            flex-wrap: wrap;
-                            gap: 1rem;
-                        ">
-                            <div>
-                                <strong style="color: #1e3c72;">${article.source}</strong>
-                                <span style="color: #666; margin-left: 1rem;">${this.formatDate(article.publishedAt)}</span>
-                            </div>
-                            <div style="display: flex; gap: 0.5rem;">
-                                <button onclick="app.toggleSave(${article.id}); this.innerHTML = app.news.find(a => a.id === ${article.id}).isSaved ? '💾 Salvat' : '💾 Salvează'" 
-                                        style="
-                                            padding: 0.5rem 1rem;
-                                            border: 2px solid #1e3c72;
-                                            background: ${article.isSaved ? '#1e3c72' : 'white'};
-                                            color: ${article.isSaved ? 'white' : '#1e3c72'};
-                                            border-radius: 20px;
-                                            cursor: pointer;
-                                            font-weight: 500;
-                                        ">
-                                    ${article.isSaved ? '💾 Salvat' : '💾 Salvează'}
-                                </button>
-                                <button onclick="window.open('${article.url}', '_blank')" 
-                                        style="
-                                            padding: 0.5rem 1rem;
-                                            border: none;
-                                            background: #27ae60;
-                                            color: white;
-                                            border-radius: 20px;
-                                            cursor: pointer;
-                                            font-weight: 500;
-                                        ">
-                                    🔗 Vezi pe ${article.source}
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div style="
-                            font-size: 1.1rem;
-                            line-height: 1.8;
-                            color: #333;
-                            text-align: justify;
-                        ">
-                            ${article.fullContent}
-                        </div>
-                        
-                        <div style="
-                            margin-top: 2rem;
-                            padding-top: 1rem;
-                            border-top: 2px solid #eee;
-                            text-align: center;
-                        ">
-                            <button onclick="window.open('${article.url}', '_blank')" 
-                                    style="
-                                        padding: 1rem 2rem;
-                                        border: none;
-                                        background: linear-gradient(45deg, #1e3c72, #2a5298);
-                                        color: white;
-                                        border-radius: 25px;
-                                        cursor: pointer;
-                                        font-weight: bold;
-                                        font-size: 1.1rem;
-                                        box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3);
-                                    ">
-                                📖 Citește articolul complet pe ${article.source}
-                            </button>
-                        </div>
-                    </div>
-                `;
-
-                modal.appendChild(modalContent);
-                document.body.appendChild(modal);
-
-                // Close modal handlers
-                const closeModal = () => {
-                    modal.style.animation = 'fadeOut 0.3s ease-in forwards';
-                    setTimeout(() => {
-                        if (modal.parentNode) {
-                            modal.parentNode.removeChild(modal);
-                        }
-                    }, 300);
-                };
-
-                document.getElementById('closeModal').addEventListener('click', closeModal);
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) closeModal();
-                });
-
-                // ESC key to close
-                const handleEscape = (e) => {
-                    if (e.key === 'Escape') {
-                        closeModal();
-                        document.removeEventListener('keydown', handleEscape);
-                    }
-                };
-                document.addEventListener('keydown', handleEscape);
-            }
-
-            updateStats() {
-                const totalEl = document.getElementById('totalNews');
-                const displayedEl = document.getElementById('displayedNews');
-                const savedEl = document.getElementById('savedNews');
-                const pwaStatusEl = document.getElementById('pwaStatus');
-                const pwaLabelEl = document.getElementById('pwaLabel');
-                
-                if (totalEl) totalEl.textContent = this.news.length;
-                if (displayedEl) displayedEl.textContent = this.filteredNews.length;
-                if (savedEl) savedEl.textContent = this.savedNews.length;
-                
-                // PWA status indicator
-                if (pwaStatusEl && pwaLabelEl) {
-                    const isPWA = window.matchMedia('(display-mode: standalone)').matches || 
-                                  window.navigator.standalone === true;
-                    
-                    if (isPWA) {
-                        pwaStatusEl.textContent = '📱';
-                        pwaLabelEl.textContent = 'App Mode';
-                        pwaStatusEl.style.color = '#27ae60';
-                    } else {
-                        pwaStatusEl.textContent = '🌐';
-                        pwaLabelEl.textContent = 'Browser';
-                        pwaStatusEl.style.color = '#3498db';
-                    }
-                }
-            }
-
-            updateLastUpdateTime() {
-                const updateEl = document.getElementById('lastUpdate');
-                if (updateEl) {
-                    const now = new Date();
-                    const timeString = now.toLocaleTimeString('ro-RO', { 
-                        hour: '2-digit', 
-                        minute: '2-digit' 
+        function shareNews(newsId) {
+            console.log('Share news:', newsId);
+            const news = newsData.find(n => n.id === newsId);
+            if (!news) return;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: news.title,
+                    text: news.summary,
+                    url: window.location.href
+                }).catch(err => console.log('Error sharing:', err));
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                const shareText = `${news.title}\n\n${news.summary}`;
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(shareText).then(() => {
+                        alert('Știrea a fost copiată în clipboard!');
+                    }).catch(() => {
+                        alert('Nu s-a putut copia textul');
                     });
-                    updateEl.textContent = timeString;
+                } else {
+                    alert('Partajare nu este disponibilă în acest browser');
                 }
-            }
-
-            showError(message) {
-                document.getElementById('newsContainer').innerHTML = `<div class="error">${message}</div>`;
-                document.getElementById('status').innerHTML = '❌ Offline';
-                document.getElementById('status').className = 'status';
             }
         }
 
-        // Initialize the app
-        const app = new NewsApp();
+        function openNews(newsId) {
+            console.log('Open news:', newsId);
+            const news = newsData.find(n => n.id === newsId);
+            if (news) {
+                alert(`📰 ${news.title}\n\n${news.summary}\n\n🕒 ${news.time} • 👁️ ${news.views} vizualizări`);
+                // Here you would navigate to full article page
+            }
+        }
+
+        // PWA functionality
+        function setupPWA() {
+            // Show install banner
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                
+                if (!localStorage.getItem('installBannerDismissed')) {
+                    installBanner.classList.add('show');
+                }
+            });
+
+            // Handle app install
+            window.addEventListener('appinstalled', () => {
+                console.log('PWA was installed');
+                installBanner.classList.remove('show');
+            });
+        }
+
+        // Service Worker registration
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            }
+        }
     </script>
 </body>
 </html>

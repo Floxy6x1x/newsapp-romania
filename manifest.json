@@ -1,7 +1,7 @@
 {
-  "name": "Teleorman News - Știri din Teleorman",
-  "short_name": "Teleorman News",
-  "description": "Ultimele știri din județul Teleorman, preluate de la teleormannews.ro",
+  "name": "Monitor Presă Teleorman",
+  "short_name": "Monitor Teleorman",
+  "description": "Monitor de presă locală din județul Teleorman - toate ziarele într-un singur feed, cu alerte pe cuvinte cheie",
   "lang": "ro",
   "start_url": "/",
   "scope": "/",
@@ -9,16 +9,16 @@
   "orientation": "portrait",
   "background_color": "#f4f6f5",
   "theme_color": "#0b6b3a",
-  "categories": ["news", "magazines"],
+  "categories": ["news"],
   "icons": [
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230b6b3a'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white'%3E%F0%9F%93%B0%3C/text%3E%3C/svg%3E",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230b6b3a'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white'%3E%F0%9F%93%A1%3C/text%3E%3C/svg%3E",
       "sizes": "192x192",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230b6b3a'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white'%3E%F0%9F%93%B0%3C/text%3E%3C/svg%3E",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230b6b3a'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='white'%3E%F0%9F%93%A1%3C/text%3E%3C/svg%3E",
       "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "any maskable"

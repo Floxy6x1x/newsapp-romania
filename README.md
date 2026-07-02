@@ -1,45 +1,50 @@
-# Teleorman News
+# Monitor Presă Teleorman
 
-Aplicație web (PWA) care afișează ultimele știri din județul Teleorman,
-preluate direct de la [teleormannews.ro](https://teleormannews.ro).
+Aplicație web (PWA) pentru **monitorizarea presei locale din județul Teleorman**.
+Adună mai multe ziare locale într-un **singur feed cronologic**, cu **alerte pe
+cuvinte cheie** și **marcare citit/necitit**. Uz personal.
 
 ## Cum funcționează
 
-- Conținutul este preluat live prin **WordPress REST API**
-  (`/wp-json/wp/v2/posts?_embed`) — titluri, rezumate, imagini și categorii.
-- Dacă REST API nu e disponibil, aplicația trece automat pe **feed-ul RSS**
-  (`/feed/`).
-- Pentru că site-ul sursă nu trimite antete CORS, cererile trec printr-un
-  **proxy CORS public** (allorigins / corsproxy / codetabs, cu fallback în lanț).
-- Categoriile din bara de sus sunt încărcate dinamic din site.
-- Funcționează offline parțial (service worker) și e instalabilă ca aplicație
-  (PWA) pe telefon sau desktop.
+- Fiecare sursă e un site de știri; aplicația citește **feed-ul RSS** al fiecăruia
+  (`https://<domeniu>/feed/`), le combină, elimină duplicatele și le sortează
+  **cronologic (cele mai noi primele)**.
+- Pentru că site-urile nu trimit antete CORS, cererile trec printr-un **proxy CORS
+  public** (allorigins / corsproxy / codetabs, cu fallback în lanț).
+- Totul rulează în browser; datele tale (surse, cuvinte cheie, articole citite,
+  temă) sunt salvate local, în `localStorage`. Nu există server propriu.
 
 ## Funcționalități
 
-- 📰 Ultimele articole, cu articol principal (featured) + grilă de carduri
-- 🔎 Căutare instantanee în titluri și rezumate
-- 🗂️ Filtrare pe categorii (încărcate din site)
-- 🔄 Auto-refresh la fiecare 5 minute + buton manual
-- 📤 Distribuire articole (Web Share API / copiere link)
-- 📱 PWA instalabilă, responsive
+- 🗞️ **Surse multiple, editabile** — adaugi/ștergi domenii direct din aplicație
+  (butonul 🗞️). Fiecare sursă arată status: ✓ câte articole / ✗ nu răspunde.
+- 🔔 **Alerte pe cuvinte cheie** — definești cuvinte (nume, localități, teme);
+  articolele care le conțin sunt evidențiate și filtrabile în tab-ul „Alerte”.
+- 📰 **Feed cronologic simplu** — listă densă, ușor de scanat.
+- ✅ **Citit / necitit** — punct pe articolele noi, badge cu numărul de necitite,
+  „Marchează tot citit”. Filtru „Necitite”.
+- 🔎 Căutare instantanee în toate sursele.
+- 🌙 Mod întunecat.
+- 🔄 Auto-refresh la 5 minute + buton manual.
+- 📱 PWA instalabilă pe telefon/desktop.
+
+## Surse implicite
+
+Aplicația pornește cu câteva domenii din Teleorman ca punct de plecare. **Verifică-le
+în panoul 🗞️**: cele care apar cu „✗ nu răspunde” nu au feed RSS accesibil la
+`/feed/` — șterge-le și adaugă exact ziarele pe care le urmărești tu.
+
+> Notă: din unele medii de dezvoltare (sandbox) accesul la aceste site-uri e
+> blocat de rețea, dar în browserul tău normal feed-urile funcționează.
 
 ## Rulare locală
 
-Fiind un site static, e suficient orice server HTTP:
-
 ```bash
 python3 -m http.server 8080
-# apoi deschide http://localhost:8080
+# deschide http://localhost:8080
 ```
 
 ## Deploy
 
-Configurat pentru **Netlify** (`netlify.toml`) — publică rădăcina proiectului.
-Merge la fel de bine pe GitHub Pages, Vercel sau orice hosting de fișiere statice.
-
-## Notă legală
-
-Aplicație **neoficială**. Tot conținutul (texte, imagini) aparține publicației
-teleormannews.ro; aplicația doar afișează extrase și trimite cititorii către
-articolul original de pe site.
+Configurat pentru **Netlify** (`netlify.toml`). Merge și pe GitHub Pages, Vercel
+sau orice hosting de fișiere statice.

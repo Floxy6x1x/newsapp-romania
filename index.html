@@ -3,54 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Știri România - Live News Feed</title>
+    <title>Teleorman News - Știri din Teleorman</title>
 
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#1a73e8">
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0b6b3a">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Știri România">
-    <meta name="description" content="Aplicația completă de știri din România cu actualizări în timp real">
-    
-    <!-- Icons -->
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231a73e8'/><text y='70' font-size='50' fill='white'>📰</text></svg>">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231a73e8'/><text y='70' font-size='50' fill='white'>📰</text></svg>">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Teleorman News">
+    <meta name="description" content="Ultimele știri din județul Teleorman, preluate de la teleormannews.ro">
+
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230b6b3a'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white'>📰</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230b6b3a'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white'>📰</text></svg>">
 
     <style>
         :root {
-            --primary: #1a73e8;
-            --primary-dark: #1557b0;
-            --secondary: #f8f9fa;
-            --accent: #ff6b35;
-            --text: #202124;
-            --text-secondary: #5f6368;
-            --border: #dadce0;
-            --shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-            --shadow-hover: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+            --primary: #0b6b3a;
+            --primary-dark: #084f2b;
+            --accent: #f2a900;
+            --bg: #f4f6f5;
+            --card: #ffffff;
+            --text: #14211a;
+            --text-secondary: #5b6b63;
+            --border: #e2e8e4;
+            --shadow: 0 1px 3px rgba(0,0,0,0.10), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-hover: 0 6px 18px rgba(0,0,0,0.14);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
             color: var(--text);
-        }
-        
-        .app-container {
             min-height: 100vh;
-            background: var(--secondary);
+        }
+
+        .app-container {
             max-width: 1200px;
             margin: 0 auto;
-            box-shadow: var(--shadow);
+            min-height: 100vh;
+            background: var(--bg);
         }
-        
-        /* Header Professional */
+
+        /* Header */
         .header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
@@ -60,995 +56,543 @@
             z-index: 100;
             box-shadow: var(--shadow);
         }
-        
+
         .header-top {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            max-width: 1200px;
-            margin: 0 auto;
+            gap: 12px;
         }
-        
+
         .logo {
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 22px;
+            font-weight: 800;
+            color: white;
             text-decoration: none;
-            color: white;
+            letter-spacing: -0.3px;
         }
-        
+
         .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            background: rgba(255,255,255,0.18);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 22px;
+            flex-shrink: 0;
         }
-        
-        .header-actions {
-            display: flex;
-            gap: 12px;
-            align-items: center;
+
+        .logo small {
+            display: block;
+            font-size: 11px;
+            font-weight: 500;
+            opacity: 0.85;
+            letter-spacing: 0.5px;
         }
-        
-        .action-btn {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            padding: 10px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .action-btn:hover {
-            background: rgba(255,255,255,0.3);
-            transform: scale(1.05);
-        }
-        
+
+        .header-actions { display: flex; gap: 10px; align-items: center; }
+
         .live-indicator {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--accent);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
+            display: flex; align-items: center; gap: 6px;
+            background: var(--accent); color: #3a2a00;
+            padding: 6px 12px; border-radius: 20px;
+            font-size: 12px; font-weight: 700;
         }
-        
         .live-dot {
-            width: 8px;
-            height: 8px;
-            background: white;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
+            width: 8px; height: 8px; background: #3a2a00;
+            border-radius: 50%; animation: pulse 2s infinite;
         }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+        .action-btn {
+            background: rgba(255,255,255,0.18);
+            border: none; color: white;
+            width: 42px; height: 42px; border-radius: 12px;
+            cursor: pointer; font-size: 18px;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s, transform 0.2s;
         }
-        
-        /* Search Bar */
-        .search-container {
-            margin-top: 16px;
-            position: relative;
-        }
-        
+        .action-btn:hover { background: rgba(255,255,255,0.3); transform: scale(1.05); }
+
+        .search-container { margin-top: 14px; position: relative; }
         .search-input {
-            width: 100%;
-            background: rgba(255,255,255,0.9);
-            border: none;
-            border-radius: 25px;
-            padding: 12px 50px 12px 20px;
-            font-size: 16px;
-            outline: none;
-            transition: all 0.3s ease;
+            width: 100%; border: none; border-radius: 25px;
+            padding: 12px 48px 12px 20px; font-size: 15px;
+            outline: none; background: rgba(255,255,255,0.95);
         }
-        
-        .search-input:focus {
-            background: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        
+        .search-input:focus { background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         .search-btn {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: var(--primary);
-            border: none;
-            color: white;
-            padding: 8px;
-            border-radius: 50%;
-            cursor: pointer;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+            background: var(--primary); border: none; color: #fff;
+            width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 15px;
         }
-        
+
         /* Categories */
         .categories {
-            background: white;
-            padding: 16px 20px;
+            background: var(--card); padding: 14px 20px;
             border-bottom: 1px solid var(--border);
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
+            overflow-x: auto; -webkit-overflow-scrolling: touch;
         }
-        
-        .categories::-webkit-scrollbar {
-            height: 4px;
-        }
-        
-        .categories::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        
-        .categories::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 2px;
-        }
-        
-        .categories-list {
-            display: flex;
-            gap: 12px;
-            min-width: max-content;
-        }
-        
+        .categories::-webkit-scrollbar { height: 4px; }
+        .categories::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 2px; }
+        .categories-list { display: flex; gap: 10px; min-width: max-content; }
         .category-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #f8f9fa;
-            border: 2px solid transparent;
-            padding: 10px 16px;
-            border-radius: 25px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            white-space: nowrap;
+            background: #eef2f0; border: 2px solid transparent;
+            padding: 9px 16px; border-radius: 22px;
+            font-size: 14px; font-weight: 600; color: var(--text-secondary);
+            cursor: pointer; white-space: nowrap; transition: all 0.2s;
         }
-        
-        .category-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
-        }
-        
-        .category-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary-dark);
-        }
-        
-        /* News Status Bar */
+        .category-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+        .category-btn.active { background: var(--primary); color: #fff; }
+
+        /* Status */
         .news-status {
-            background: #e8f5e8;
-            border-left: 4px solid #4caf50;
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 14px;
+            background: #e9f5ee; border-left: 4px solid var(--primary);
+            padding: 10px 20px; display: flex; align-items: center;
+            justify-content: space-between; gap: 12px; font-size: 13px;
         }
-        
-        .status-info {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .refresh-btn {
-            background: #4caf50;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 15px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.3s ease;
-        }
-        
-        .refresh-btn:hover {
-            background: #45a049;
-        }
-        
-        /* News Grid */
-        .news-container {
-            padding: 20px;
-            background: #f8f9fa;
-        }
-        
+        .status-info { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); }
+
+        /* News grid */
+        .news-container { padding: 20px; }
         .news-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
         }
-        
-        /* Featured Article */
+
         .featured-article {
             grid-column: 1 / -1;
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            cursor: pointer;
+            background: var(--card); border-radius: 16px; overflow: hidden;
+            box-shadow: var(--shadow); cursor: pointer; transition: all 0.25s;
         }
-        
-        .featured-article:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-hover);
+        .featured-article:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+        .featured-content { display: grid; grid-template-columns: 1.2fr 1fr; }
+        .featured-media { position: relative; min-height: 260px; background: var(--primary); }
+        .featured-media img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+        .featured-fallback {
+            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+            font-size: 72px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff;
         }
-        
-        .featured-content {
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 0;
-        }
-        
-        .featured-text {
-            padding: 24px;
-        }
-        
+        .featured-text { padding: 26px; display: flex; flex-direction: column; justify-content: center; }
         .featured-badge {
-            display: inline-block;
-            background: var(--accent);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 12px;
+            display: inline-block; align-self: flex-start; background: var(--accent); color: #3a2a00;
+            padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 800; margin-bottom: 12px;
+            text-transform: uppercase; letter-spacing: 0.5px;
         }
-        
-        .featured-title {
-            font-size: 28px;
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 12px;
-            color: var(--text);
-        }
-        
-        .featured-summary {
-            font-size: 16px;
-            line-height: 1.5;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-        }
-        
-        .featured-meta {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-        
-        .featured-image {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 80px;
-            color: white;
-            position: relative;
-        }
-        
-        /* Regular News Cards */
+        .featured-title { font-size: 26px; font-weight: 800; line-height: 1.2; margin-bottom: 12px; }
+        .featured-summary { font-size: 15px; line-height: 1.55; color: var(--text-secondary); margin-bottom: 16px; }
+        .featured-meta { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--text-secondary); }
+
         .news-card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            cursor: pointer;
+            background: var(--card); border-radius: 14px; overflow: hidden;
+            box-shadow: var(--shadow); cursor: pointer; transition: all 0.25s;
+            display: flex; flex-direction: column;
         }
-        
-        .news-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-hover);
+        .news-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+        .news-media { position: relative; height: 190px; background: var(--primary); }
+        .news-media img { width: 100%; height: 100%; object-fit: cover; }
+        .news-fallback {
+            width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+            font-size: 46px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff;
         }
-        
-        .news-image {
-            height: 200px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            color: white;
-            position: relative;
+        .news-cat-badge {
+            position: absolute; top: 10px; left: 10px; background: rgba(11,107,58,0.92);
+            color: #fff; padding: 5px 10px; border-radius: 14px; font-size: 11px; font-weight: 700;
         }
-        
-        .news-badge {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 6px 10px;
-            border-radius: 15px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        
-        .bookmark-btn {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            width: 36px;
-            height: 36px;
-            background: rgba(255,255,255,0.9);
-            border: none;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .bookmark-btn:hover {
-            background: white;
-            transform: scale(1.1);
-        }
-        
-        .bookmark-btn.bookmarked {
-            background: #ffd700;
-            color: white;
-        }
-        
-        .news-content {
-            padding: 20px;
-        }
-        
-        .news-title {
-            font-size: 18px;
-            font-weight: 600;
-            line-height: 1.3;
-            margin-bottom: 10px;
-            color: var(--text);
-        }
-        
-        .news-summary {
-            font-size: 14px;
-            line-height: 1.4;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-        }
-        
-        .news-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .news-meta {
-            display: flex;
-            gap: 16px;
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-        
-        .news-actions {
-            display: flex;
-            gap: 8px;
-        }
-        
+        .news-content { padding: 16px 18px 18px; display: flex; flex-direction: column; flex: 1; }
+        .news-title { font-size: 17px; font-weight: 700; line-height: 1.32; margin-bottom: 10px; }
+        .news-summary { font-size: 14px; line-height: 1.5; color: var(--text-secondary); margin-bottom: 14px; flex: 1; }
+        .news-footer { display: flex; justify-content: space-between; align-items: center; }
+        .news-meta { display: flex; gap: 12px; font-size: 12px; color: var(--text-secondary); }
+        .news-actions { display: flex; gap: 6px; }
         .action-icon {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 6px;
-            border-radius: 50%;
-            transition: all 0.3s ease;
+            background: none; border: none; color: var(--text-secondary); cursor: pointer;
+            padding: 6px; border-radius: 8px; font-size: 15px; transition: all 0.2s;
         }
-        
-        .action-icon:hover {
-            background: #f0f0f0;
-            color: var(--primary);
+        .action-icon:hover { background: #eef2f0; color: var(--primary); }
+
+        /* Loading / error */
+        .loading, .empty, .error {
+            grid-column: 1 / -1; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; padding: 60px 20px;
+            color: var(--text-secondary); text-align: center;
         }
-        
-        /* Loading States */
-        .loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            color: var(--text-secondary);
-        }
-        
         .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 16px;
+            width: 40px; height: 40px; border: 3px solid #e2e8e4;
+            border-top-color: var(--primary); border-radius: 50%;
+            animation: spin 0.9s linear infinite; margin-bottom: 16px;
         }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Error States */
-        .error {
-            background: #ffebee;
-            border: 1px solid #ffcdd2;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px;
-            text-align: center;
-            color: #d32f2f;
-        }
-        
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .error { color: #b3261e; }
         .retry-btn {
-            background: #d32f2f;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            margin-top: 12px;
+            background: var(--primary); color: #fff; border: none;
+            padding: 10px 22px; border-radius: 22px; cursor: pointer; margin-top: 14px; font-weight: 600;
         }
-        
-        /* Responsive Design */
+
+        .skeleton {
+            border-radius: 14px; overflow: hidden; background: var(--card); box-shadow: var(--shadow);
+        }
+        .skeleton .sk-media { height: 190px; background: linear-gradient(90deg,#eef2f0 25%,#e2e8e4 50%,#eef2f0 75%); background-size: 200% 100%; animation: shimmer 1.3s infinite; }
+        .skeleton .sk-line { height: 12px; margin: 14px 18px; border-radius: 6px; background: linear-gradient(90deg,#eef2f0 25%,#e2e8e4 50%,#eef2f0 75%); background-size: 200% 100%; animation: shimmer 1.3s infinite; }
+        .skeleton .sk-line.short { width: 55%; }
+        @keyframes shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
+
+        footer.site-footer {
+            text-align: center; padding: 24px 20px; color: var(--text-secondary); font-size: 13px;
+        }
+        footer.site-footer a { color: var(--primary); font-weight: 600; text-decoration: none; }
+
         @media (max-width: 768px) {
-            .header {
-                padding: 12px 16px;
-            }
-            
-            .logo {
-                font-size: 20px;
-            }
-            
-            .featured-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .featured-image {
-                height: 200px;
-            }
-            
-            .news-grid {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-            
-            .categories {
-                padding: 12px 16px;
-            }
-            
-            .news-container {
-                padding: 16px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .featured-title {
-                font-size: 22px;
-            }
-            
-            .news-title {
-                font-size: 16px;
-            }
+            .featured-content { grid-template-columns: 1fr; }
+            .featured-media { min-height: 200px; height: 200px; }
+            .featured-title { font-size: 22px; }
+            .news-grid { grid-template-columns: 1fr; }
+            .logo { font-size: 18px; }
         }
     </style>
 </head>
 <body>
     <div class="app-container">
-        <!-- Header -->
         <header class="header">
             <div class="header-top">
-                <a href="#" class="logo">
+                <a href="https://teleormannews.ro" target="_blank" rel="noopener" class="logo">
                     <div class="logo-icon">📰</div>
-                    <span>Știri România</span>
+                    <span>Teleorman News<small>Știri din județul Teleorman</small></span>
                 </a>
-                
                 <div class="header-actions">
-                    <div class="live-indicator">
-                        <div class="live-dot"></div>
-                        LIVE
-                    </div>
+                    <div class="live-indicator"><div class="live-dot"></div>LIVE</div>
                     <button class="action-btn" id="refreshBtn" title="Actualizează">🔄</button>
-                    <button class="action-btn" id="settingsBtn" title="Setări">⚙️</button>
                 </div>
             </div>
-            
             <div class="search-container">
-                <input type="text" class="search-input" id="searchInput" placeholder="Caută știri în timp real...">
-                <button class="search-btn" id="searchSubmit">🔍</button>
+                <input type="text" class="search-input" id="searchInput" placeholder="Caută în știrile din Teleorman...">
+                <button class="search-btn" id="searchSubmit" title="Caută">🔍</button>
             </div>
         </header>
 
-        <!-- Categories -->
         <div class="categories">
             <div class="categories-list" id="categoriesList">
-                <button class="category-btn active" data-category="general">📰 Toate</button>
-                <button class="category-btn" data-category="business">💼 Business</button>
-                <button class="category-btn" data-category="technology">💻 Tech</button>
-                <button class="category-btn" data-category="sports">⚽ Sport</button>
-                <button class="category-btn" data-category="health">🏥 Sănătate</button>
-                <button class="category-btn" data-category="entertainment">🎬 Entertainment</button>
-                <button class="category-btn" data-category="science">🔬 Știință</button>
+                <button class="category-btn active" data-category="">📰 Toate</button>
             </div>
         </div>
 
-        <!-- News Status -->
         <div class="news-status" id="newsStatus">
             <div class="status-info">
                 <span>📡</span>
-                <span id="statusText">Încărcare știri...</span>
+                <span id="statusText">Se încarcă știrile...</span>
             </div>
-            <button class="refresh-btn" id="manualRefresh">Actualizează</button>
         </div>
 
-        <!-- News Container -->
         <div class="news-container">
-            <div class="news-grid" id="newsGrid">
-                <div class="loading">
-                    <div class="loading-spinner"></div>
-                    <p>Se încarcă știrile în timp real...</p>
-                </div>
-            </div>
+            <div class="news-grid" id="newsGrid"></div>
         </div>
+
+        <footer class="site-footer">
+            Conținut preluat de la <a href="https://teleormannews.ro" target="_blank" rel="noopener">teleormannews.ro</a>.
+            Toate drepturile aparțin publicației. Aplicație neoficială.
+        </footer>
     </div>
 
     <script>
-        class NewsApp {
+        class TeleormanNews {
             constructor() {
-                this.currentCategory = 'general';
+                this.SITE = 'https://teleormannews.ro';
+                // CORS proxies tried in order until one succeeds (site does not send CORS headers).
+                this.proxies = [
+                    u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
+                    u => `https://corsproxy.io/?url=${encodeURIComponent(u)}`,
+                    u => `https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(u)}`
+                ];
+                this.currentCategory = '';   // '' = toate; altfel id-ul categoriei WP
                 this.searchQuery = '';
+                this.articles = [];
                 this.isLoading = false;
-                this.bookmarkedNews = JSON.parse(localStorage.getItem('bookmarkedNews') || '[]');
-                this.lastUpdate = null;
                 this.autoRefreshInterval = null;
-                
-                // Multiple RSS sources for comprehensive coverage
-                this.rssSources = {
-                    general: [
-                        'https://rss-proxy-api.vercel.app/api/rss?url=' + encodeURIComponent('https://www.digi24.ro/rss'),
-                        'https://rss-proxy-api.vercel.app/api/rss?url=' + encodeURIComponent('https://www.hotnews.ro/rss'),
-                        'https://rss-proxy-api.vercel.app/api/rss?url=' + encodeURIComponent('https://www.libertatea.ro/rss'),
-                        'https://rss-proxy-api.vercel.app/api/rss?url=' + encodeURIComponent('https://www.g4media.ro/feed')
-                    ],
-                    business: [
-                        'https://rss-proxy-api.vercel.app/api/rss?url=' + encodeURIComponent('https://www.zf.ro/rss'),
-                        'https://rss-proxy-api.vercel.app/api/rss?url=' + encodeURIComponent('https://www.wall-street.ro/rss/all.xml')
-                    ],
-                    technology: [
-                        'https://rss-proxy-api.vercel.app/api/rss?url=' + encodeURIComponent('https://www.zf.ro/rss/sectiune/it-c-telecom-15'),
-                        'https://rss-proxy-api.vercel.app/api/rss?url=' + encodeURIComponent('https://start-up.ro/feed/')
-                    ],
-                    sports: [
-                        'https://rss-proxy-api.vercel.app/api/rss?url=' + encodeURIComponent('https://www.prosport.ro/rss/'),
-                        'https://rss-proxy-api.vercel.app/api/rss?url=' + encodeURIComponent('https://www.gsp.ro/rss')
-                    ]
-                };
-                
-                this.initializeApp();
+
+                this.init();
             }
-            
-            initializeApp() {
-                console.log('🚀 Inițializez aplicația profesională de știri...');
-                this.setupEventListeners();
+
+            init() {
+                this.bindEvents();
+                this.loadCategories();
                 this.loadNews();
-                this.startAutoRefresh();
-                this.updateLastRefreshTime();
+                this.autoRefreshInterval = setInterval(() => this.loadNews(true), 5 * 60 * 1000);
             }
-            
-            setupEventListeners() {
-                // Search functionality
-                const searchInput = document.getElementById('searchInput');
-                const searchSubmit = document.getElementById('searchSubmit');
-                
-                searchInput?.addEventListener('input', (e) => {
-                    clearTimeout(this.searchTimeout);
-                    this.searchTimeout = setTimeout(() => {
-                        this.searchQuery = e.target.value.toLowerCase();
-                        this.filterAndRenderNews();
+
+            bindEvents() {
+                const input = document.getElementById('searchInput');
+                input.addEventListener('input', (e) => {
+                    clearTimeout(this._t);
+                    this._t = setTimeout(() => {
+                        this.searchQuery = e.target.value.trim().toLowerCase();
+                        this.render();
                     }, 300);
                 });
-                
-                searchSubmit?.addEventListener('click', () => {
-                    this.searchQuery = searchInput.value.toLowerCase();
-                    this.filterAndRenderNews();
+                document.getElementById('searchSubmit').addEventListener('click', () => {
+                    this.searchQuery = input.value.trim().toLowerCase();
+                    this.render();
                 });
-                
-                // Category selection
-                document.getElementById('categoriesList')?.addEventListener('click', (e) => {
-                    if (e.target.classList.contains('category-btn')) {
-                        this.selectCategory(e.target);
-                    }
+                document.getElementById('categoriesList').addEventListener('click', (e) => {
+                    const btn = e.target.closest('.category-btn');
+                    if (!btn) return;
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    this.currentCategory = btn.dataset.category || '';
+                    this.loadNews();
                 });
-                
-                // Refresh buttons
-                document.getElementById('refreshBtn')?.addEventListener('click', () => this.loadNews(true));
-                document.getElementById('manualRefresh')?.addEventListener('click', () => this.loadNews(true));
-                
-                // Settings
-                document.getElementById('settingsBtn')?.addEventListener('click', () => this.showSettings());
+                document.getElementById('refreshBtn').addEventListener('click', () => this.loadNews(true));
             }
-            
-            selectCategory(button) {
-                // Update UI
-                document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                
-                // Update category and load news
-                this.currentCategory = button.dataset.category;
-                this.loadNews();
+
+            // ---- Networking ----
+            async fetchViaProxy(targetUrl) {
+                let lastErr;
+                for (const make of this.proxies) {
+                    try {
+                        const res = await fetch(make(targetUrl), { cache: 'no-store' });
+                        if (!res.ok) { lastErr = new Error('HTTP ' + res.status); continue; }
+                        const text = await res.text();
+                        if (text && text.length > 20) return text;
+                        lastErr = new Error('Răspuns gol');
+                    } catch (err) { lastErr = err; }
+                }
+                throw lastErr || new Error('Toate proxy-urile au eșuat');
             }
-            
-            async loadNews(forceRefresh = false) {
-                if (this.isLoading && !forceRefresh) return;
-                
-                this.isLoading = true;
-                this.updateStatus('🔄 Sincronizez știrile...', 'loading');
-                
+
+            async loadCategories() {
                 try {
-                    const articles = await this.fetchNewsFromMultipleSources();
-                    this.articles = this.processArticles(articles);
-                    this.filterAndRenderNews();
-                    this.updateStatus(`✅ Actualizat: ${new Date().toLocaleTimeString('ro-RO')} (${this.articles.length} știri)`, 'success');
-                    this.lastUpdate = new Date();
-                } catch (error) {
-                    console.error('Eroare la încărcarea știrilor:', error);
-                    this.handleError();
+                    const url = `${this.SITE}/wp-json/wp/v2/categories?per_page=100&orderby=count&order=desc&hide_empty=true`;
+                    const cats = JSON.parse(await this.fetchViaProxy(url));
+                    const top = cats
+                        .filter(c => c.count > 0 && c.slug !== 'uncategorized')
+                        .slice(0, 8);
+                    const list = document.getElementById('categoriesList');
+                    top.forEach(c => {
+                        const btn = document.createElement('button');
+                        btn.className = 'category-btn';
+                        btn.dataset.category = c.id;
+                        btn.innerHTML = this.decode(c.name);
+                        list.appendChild(btn);
+                    });
+                } catch (err) {
+                    console.warn('Nu s-au putut încărca categoriile:', err);
+                }
+            }
+
+            async loadNews(force = false) {
+                if (this.isLoading && !force) return;
+                this.isLoading = true;
+                this.renderSkeletons();
+                this.setStatus('🔄 Sincronizez știrile din Teleorman...');
+
+                try {
+                    this.articles = await this.fetchPosts();
+                    if (!this.articles.length) throw new Error('Niciun articol');
+                    this.render();
+                    this.setStatus(`✅ Actualizat la ${new Date().toLocaleTimeString('ro-RO')} · ${this.articles.length} știri`);
+                } catch (err) {
+                    console.error(err);
+                    this.renderError();
+                    this.setStatus('❌ Nu s-au putut încărca știrile');
                 } finally {
                     this.isLoading = false;
                 }
             }
-            
-            async fetchNewsFromMultipleSources() {
-                const sources = this.rssSources[this.currentCategory] || this.rssSources.general;
-                const promises = sources.map(url => this.fetchFromRSS(url));
-                
-                const results = await Promise.allSettled(promises);
-                const articles = [];
-                
-                results.forEach((result, index) => {
-                    if (result.status === 'fulfilled') {
-                        articles.push(...result.value);
-                        console.log(`✅ Sursă ${index + 1}: ${result.value.length} articole`);
-                    } else {
-                        console.warn(`❌ Sursă ${index + 1} eșuată:`, result.reason);
-                    }
-                });
-                
-                return articles;
-            }
-            
-            async fetchFromRSS(url) {
+
+            async fetchPosts() {
+                // 1) Încearcă WordPress REST API (imagini + categorii structurate)
                 try {
-                    const response = await fetch(url);
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    
-                    const data = await response.json();
-                    return this.parseRSSData(data);
-                } catch (error) {
-                    console.warn(`RSS fetch failed for ${url}:`, error);
-                    return [];
+                    let url = `${this.SITE}/wp-json/wp/v2/posts?_embed&per_page=24`;
+                    if (this.currentCategory) url += `&categories=${this.currentCategory}`;
+                    const posts = JSON.parse(await this.fetchViaProxy(url));
+                    if (Array.isArray(posts) && posts.length) return posts.map(p => this.mapRestPost(p));
+                } catch (err) {
+                    console.warn('REST API indisponibil, trec pe RSS:', err);
                 }
+                // 2) Fallback: feed RSS
+                const xml = await this.fetchViaProxy(`${this.SITE}/feed/`);
+                return this.parseRss(xml);
             }
-            
-            parseRSSData(data) {
-                const articles = [];
-                const items = data.items || data.rss?.channel?.item || [];
-                
-                items.forEach(item => {
-                    try {
-                        articles.push({
-                            id: this.generateId(item.title + item.link),
-                            title: this.cleanText(item.title),
-                            summary: this.extractSummary(item.description || item.summary),
-                            link: item.link,
-                            pubDate: new Date(item.pubDate || item.published),
-                            source: this.extractSource(item.link),
-                            category: this.currentCategory,
-                            image: this.getRandomEmoji(),
-                            views: this.generateViews(),
-                            bookmarked: this.bookmarkedNews.includes(this.generateId(item.title + item.link))
-                        });
-                    } catch (error) {
-                        console.warn('Eroare la parsarea articolului:', error);
-                    }
+
+            mapRestPost(p) {
+                let image = '';
+                const media = p._embedded?.['wp:featuredmedia']?.[0];
+                if (media) {
+                    image = media.media_details?.sizes?.medium_large?.source_url
+                        || media.media_details?.sizes?.large?.source_url
+                        || media.source_url || '';
+                }
+                const term = p._embedded?.['wp:term']?.[0]?.[0];
+                return {
+                    id: 'p' + p.id,
+                    title: this.decode(p.title?.rendered || ''),
+                    summary: this.stripHtml(p.excerpt?.rendered || '').slice(0, 180),
+                    link: p.link,
+                    date: new Date(p.date_gmt ? p.date_gmt + 'Z' : p.date),
+                    image,
+                    category: term ? this.decode(term.name) : 'Teleorman'
+                };
+            }
+
+            parseRss(xml) {
+                const doc = new DOMParser().parseFromString(xml, 'text/xml');
+                return Array.from(doc.querySelectorAll('item')).map((item, i) => {
+                    const get = (tag) => item.querySelector(tag)?.textContent || '';
+                    const content = get('encoded') || get('description');
+                    const imgMatch = content.match(/<img[^>]+src=["']([^"']+)["']/i);
+                    const mediaEl = item.getElementsByTagName('media:content')[0]
+                        || item.getElementsByTagName('enclosure')[0];
+                    const cat = item.querySelector('category')?.textContent || 'Teleorman';
+                    return {
+                        id: 'r' + i,
+                        title: this.decode(get('title')),
+                        summary: this.stripHtml(get('description')).slice(0, 180),
+                        link: get('link').trim(),
+                        date: new Date(get('pubDate')),
+                        image: imgMatch ? imgMatch[1] : (mediaEl?.getAttribute('url') || ''),
+                        category: this.decode(cat)
+                    };
                 });
-                
-                return articles;
             }
-            
-            processArticles(articles) {
-                // Remove duplicates and sort by date
-                const uniqueArticles = articles.filter((article, index, self) =>
-                    index === self.findIndex(a => a.title === article.title)
+
+            // ---- Rendering ----
+            getFiltered() {
+                if (!this.searchQuery) return this.articles;
+                return this.articles.filter(a =>
+                    a.title.toLowerCase().includes(this.searchQuery) ||
+                    a.summary.toLowerCase().includes(this.searchQuery)
                 );
-                
-                return uniqueArticles
-                    .sort((a, b) => b.pubDate - a.pubDate)
-                    .slice(0, 50); // Limit to 50 most recent
             }
-            
-            filterAndRenderNews() {
-                if (!this.articles) return;
-                
-                let filteredArticles = this.articles;
-                
-                // Apply search filter
-                if (this.searchQuery) {
-                    filteredArticles = this.articles.filter(article =>
-                        article.title.toLowerCase().includes(this.searchQuery) ||
-                        article.summary.toLowerCase().includes(this.searchQuery)
-                    );
-                }
-                
-                this.renderNews(filteredArticles);
-            }
-            
-            renderNews(articles) {
-                const newsGrid = document.getElementById('newsGrid');
-                if (!newsGrid) return;
-                
-                if (articles.length === 0) {
-                    newsGrid.innerHTML = `
-                        <div class="error">
-                            <h3>😔 Nu s-au găsit știri</h3>
-                            <p>Încearcă să modifici criteriile de căutare sau categoria.</p>
-                        </div>
-                    `;
+
+            render() {
+                const grid = document.getElementById('newsGrid');
+                const items = this.getFiltered();
+                if (!items.length) {
+                    grid.innerHTML = `<div class="empty"><h3>😔 Nicio știre găsită</h3><p>Încearcă altă categorie sau alt termen de căutare.</p></div>`;
                     return;
                 }
-                
-                // Featured article (first one)
-                const [featured, ...regular] = articles;
-                
-                const html = `
-                    ${this.renderFeaturedArticle(featured)}
-                    ${regular.map(article => this.renderRegularArticle(article)).join('')}
-                `;
-                
-                newsGrid.innerHTML = html;
+                const [featured, ...rest] = items;
+                grid.innerHTML = this.featuredHtml(featured) + rest.map(a => this.cardHtml(a)).join('');
             }
-            
-            renderFeaturedArticle(article) {
+
+            featuredHtml(a) {
                 return `
-                    <article class="featured-article" onclick="window.open('${article.link}', '_blank')">
-                        <div class="featured-content">
-                            <div class="featured-text">
-                                <span class="featured-badge">FEATURED</span>
-                                <h1 class="featured-title">${article.title}</h1>
-                                <p class="featured-summary">${article.summary}</p>
-                                <div class="featured-meta">
-                                    <span>📰 ${article.source}</span>
-                                    <span>🕒 ${this.formatTime(article.pubDate)}</span>
-                                    <span>👁️ ${article.views}</span>
-                                </div>
-                            </div>
-                            <div class="featured-image">
-                                ${article.image}
-                                <button class="bookmark-btn ${article.bookmarked ? 'bookmarked' : ''}" 
-                                        onclick="event.stopPropagation(); newsApp.toggleBookmark('${article.id}')">
-                                    ${article.bookmarked ? '★' : '☆'}
-                                </button>
+                <article class="featured-article" onclick="app.open('${a.link}')">
+                    <div class="featured-content">
+                        <div class="featured-media">
+                            ${a.image
+                                ? `<img src="${a.image}" alt="" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="featured-fallback" style="display:none">📰</div>`
+                                : `<div class="featured-fallback">📰</div>`}
+                        </div>
+                        <div class="featured-text">
+                            <span class="featured-badge">${this.esc(a.category)}</span>
+                            <h1 class="featured-title">${this.esc(a.title)}</h1>
+                            <p class="featured-summary">${this.esc(a.summary)}…</p>
+                            <div class="featured-meta">
+                                <span>🕒 ${this.timeAgo(a.date)}</span>
+                                <span>🔗 Citește pe teleormannews.ro</span>
                             </div>
                         </div>
-                    </article>
-                `;
-            }
-            
-            renderRegularArticle(article) {
-                return `
-                    <article class="news-card" onclick="window.open('${article.link}', '_blank')">
-                        <div class="news-image">
-                            ${article.image}
-                            <div class="news-badge">${article.source}</div>
-                            <button class="bookmark-btn ${article.bookmarked ? 'bookmarked' : ''}" 
-                                    onclick="event.stopPropagation(); newsApp.toggleBookmark('${article.id}')">
-                                ${article.bookmarked ? '★' : '☆'}
-                            </button>
-                        </div>
-                        <div class="news-content">
-                            <h2 class="news-title">${article.title}</h2>
-                            <p class="news-summary">${article.summary}</p>
-                            <div class="news-footer">
-                                <div class="news-meta">
-                                    <span>🕒 ${this.formatTime(article.pubDate)}</span>
-                                    <span>👁️ ${article.views}</span>
-                                </div>
-                                <div class="news-actions">
-                                    <button class="action-icon" onclick="event.stopPropagation(); newsApp.shareArticle('${article.id}')" title="Distribuie">📤</button>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
-                `;
-            }
-            
-            // Utility functions
-            generateId(text) {
-                return btoa(text).replace(/[^a-zA-Z0-9]/g, '').substr(0, 16);
-            }
-            
-            cleanText(text) {
-                return text.replace(/<[^>]*>/g, '').trim().substr(0, 200);
-            }
-            
-            extractSummary(description) {
-                if (!description) return 'Nu este disponibil un rezumat...';
-                return this.cleanText(description).substr(0, 150) + '...';
-            }
-            
-            extractSource(url) {
-                try {
-                    const domain = new URL(url).hostname;
-                    const sources = {
-                        'digi24.ro': 'Digi24',
-                        'hotnews.ro': 'HotNews',
-                        'libertatea.ro': 'Libertatea',
-                        'g4media.ro': 'G4Media',
-                        'zf.ro': 'Ziarul Financiar',
-                        'wall-street.ro': 'Wall-Street',
-                        'prosport.ro': 'ProSport',
-                        'gsp.ro': 'Gazeta Sporturilor'
-                    };
-                    
-                    for (const [key, value] of Object.entries(sources)) {
-                        if (domain.includes(key)) return value;
-                    }
-                    
-                    return domain.replace('www.', '');
-                } catch {
-                    return 'Necunoscut';
-                }
-            }
-            
-            getRandomEmoji() {
-                const emojis = {
-                    general: ['📰', '📺', '🗞️', '📻', '🎤'],
-                    business: ['💼', '💰', '📈', '🏢', '💳'],
-                    technology: ['💻', '📱', '🔬', '🚀', '⚡'],
-                    sports: ['⚽', '🏀', '🎾', '🏆', '🥇'],
-                    health: ['🏥', '💊', '🔬', '🩺', '🧪'],
-                    entertainment: ['🎬', '🎭', '🎵', '🎪', '🎨'],
-                    science: ['🔬', '🧪', '🔭', '🌌', '🧬']
-                };
-                
-                const categoryEmojis = emojis[this.currentCategory] || emojis.general;
-                return categoryEmojis[Math.floor(Math.random() * categoryEmojis.length)];
-            }
-            
-            generateViews() {
-                return Math.floor(Math.random() * 10000) + 100 + '';
-            }
-            
-            formatTime(date) {
-                const now = new Date();
-                const diff = now - date;
-                const minutes = Math.floor(diff / 60000);
-                const hours = Math.floor(minutes / 60);
-                const days = Math.floor(hours / 24);
-                
-                if (minutes < 60) return `${minutes}m`;
-                if (hours < 24) return `${hours}h`;
-                return `${days}z`;
-            }
-            
-            updateStatus(message, type = 'info') {
-                const statusText = document.getElementById('statusText');
-                if (statusText) {
-                    statusText.textContent = message;
-                }
-            }
-            
-            startAutoRefresh() {
-                // Refresh every 5 minutes
-                this.autoRefreshInterval = setInterval(() => {
-                    this.loadNews();
-                }, 5 * 60 * 1000);
-            }
-            
-            updateLastRefreshTime() {
-                setInterval(() => {
-                    if (this.lastUpdate) {
-                        const elapsed = Math.floor((new Date() - this.lastUpdate) / 1000);
-                        if (elapsed < 60) {
-                            this.updateStatus(`✅ Actualizat acum ${elapsed}s`);
-                        } else {
-                            this.updateStatus(`✅ Actualizat acum ${Math.floor(elapsed/60)}m`);
-                        }
-                    }
-                }, 10000);
-            }
-            
-            handleError() {
-                const newsGrid = document.getElementById('newsGrid');
-                newsGrid.innerHTML = `
-                    <div class="error">
-                        <h3>⚠️ Eroare la încărcarea știrilor</h3>
-                        <p>Nu s-au putut încărca știrile. Verifică conexiunea la internet și încearcă din nou.</p>
-                        <button class="retry-btn" onclick="newsApp.loadNews(true)">Încearcă din nou</button>
                     </div>
-                `;
-                this.updateStatus('❌ Eroare la sincronizare', 'error');
+                </article>`;
             }
-            
-            toggleBookmark(articleId) {
-                const index = this.bookmarkedNews.indexOf(articleId);
-                if (index > -1) {
-                    this.bookmarkedNews.splice(index, 1);
-                } else {
-                    this.bookmarkedNews.push(articleId);
-                }
-                
-                localStorage.setItem('bookmarkedNews', JSON.stringify(this.bookmarkedNews));
-                
-                // Update article in memory
-                if (this.articles) {
-                    const article = this.articles.find(a => a.id === articleId);
-                    if (article) {
-                        article.bookmarked = !article.bookmarked;
-                        this.filterAndRenderNews();
-                    }
-                }
+
+            cardHtml(a) {
+                return `
+                <article class="news-card" onclick="app.open('${a.link}')">
+                    <div class="news-media">
+                        ${a.image
+                            ? `<img src="${a.image}" alt="" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="news-fallback" style="display:none">📰</div>`
+                            : `<div class="news-fallback">📰</div>`}
+                        <span class="news-cat-badge">${this.esc(a.category)}</span>
+                    </div>
+                    <div class="news-content">
+                        <h2 class="news-title">${this.esc(a.title)}</h2>
+                        <p class="news-summary">${this.esc(a.summary)}…</p>
+                        <div class="news-footer">
+                            <div class="news-meta"><span>🕒 ${this.timeAgo(a.date)}</span></div>
+                            <div class="news-actions">
+                                <button class="action-icon" onclick="event.stopPropagation(); app.share('${a.id}')" title="Distribuie">📤</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>`;
             }
-            
-            shareArticle(articleId) {
-                const article = this.articles?.find(a => a.id === articleId);
-                if (!article) return;
-                
+
+            renderSkeletons() {
+                if (this.articles.length) return; // păstrează conținutul la refresh
+                const grid = document.getElementById('newsGrid');
+                grid.innerHTML = Array.from({ length: 6 }).map(() =>
+                    `<div class="skeleton"><div class="sk-media"></div><div class="sk-line"></div><div class="sk-line short"></div></div>`
+                ).join('');
+            }
+
+            renderError() {
+                document.getElementById('newsGrid').innerHTML = `
+                    <div class="error">
+                        <h3>⚠️ Nu s-au putut încărca știrile</h3>
+                        <p>Verifică conexiunea la internet. Sursa poate fi temporar indisponibilă.</p>
+                        <button class="retry-btn" onclick="app.loadNews(true)">Încearcă din nou</button>
+                    </div>`;
+            }
+
+            // ---- Actions ----
+            open(url) { if (url) window.open(url, '_blank', 'noopener'); }
+
+            share(id) {
+                const a = this.articles.find(x => x.id === id);
+                if (!a) return;
                 if (navigator.share) {
-                    navigator.share({
-                        title: article.title,
-                        text: article.summary,
-                        url: article.link
-                    }).catch(console.error);
+                    navigator.share({ title: a.title, url: a.link }).catch(() => {});
                 } else {
-                    navigator.clipboard.writeText(article.link).then(() => {
-                        alert('Link-ul a fost copiat în clipboard!');
-                    }).catch(() => {
-                        alert('Nu s-a putut copia link-ul');
-                    });
+                    navigator.clipboard.writeText(a.link)
+                        .then(() => alert('Link copiat în clipboard!'))
+                        .catch(() => alert(a.link));
                 }
             }
-            
-            showSettings() {
-                alert('⚙️ Setări:\n\n• Auto-refresh: 5 minute\n• Surse: Multiple RSS românești\n• Offline: Support PWA\n\nMai multe setări în curând!');
+
+            setStatus(msg) { document.getElementById('statusText').textContent = msg; }
+
+            // ---- Utils ----
+            stripHtml(html) {
+                const d = document.createElement('div');
+                d.innerHTML = html;
+                return (d.textContent || d.innerText || '').replace(/\s+/g, ' ').trim();
+            }
+            decode(text) {
+                const d = document.createElement('textarea');
+                d.innerHTML = text;
+                return d.value.replace(/<[^>]*>/g, '').trim();
+            }
+            esc(text) {
+                return String(text).replace(/[&<>"']/g, c =>
+                    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+            }
+            timeAgo(date) {
+                if (!(date instanceof Date) || isNaN(date)) return '';
+                const s = Math.floor((Date.now() - date.getTime()) / 1000);
+                if (s < 60) return 'acum';
+                const m = Math.floor(s / 60);
+                if (m < 60) return `acum ${m} min`;
+                const h = Math.floor(m / 60);
+                if (h < 24) return `acum ${h} h`;
+                const d = Math.floor(h / 24);
+                if (d < 7) return `acum ${d} z`;
+                return date.toLocaleDateString('ro-RO', { day: 'numeric', month: 'short' });
             }
         }
-        
-        // Initialize the app
-        let newsApp;
-        document.addEventListener('DOMContentLoaded', () => {
-            newsApp = new NewsApp();
-        });
-        
-        // PWA Support
+
+        let app;
+        document.addEventListener('DOMContentLoaded', () => { app = new TeleormanNews(); });
+
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => console.log('✅ SW registered'))
-                    .catch(error => console.log('❌ SW registration failed'));
+                navigator.serviceWorker.register('/sw.js').catch(() => {});
             });
         }
     </script>

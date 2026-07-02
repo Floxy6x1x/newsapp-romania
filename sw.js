@@ -1,4 +1,4 @@
-const CACHE_NAME = 'newsapp-romania-v1';
+const CACHE_NAME = 'teleorman-news-v1';
 const urlsToCache = [
   '/',
   '/index.html',

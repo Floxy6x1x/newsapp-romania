@@ -1,8 +1,8 @@
-const CACHE_NAME = 'newsapp-romania-v1';
+const CACHE_NAME = 'teleorman-news-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/manifest.json'
+  './',
+  'index.html',
+  'manifest.json'
 ];
 
 // Install event - cache resources
@@ -83,7 +83,7 @@ self.addEventListener('fetch', (event) => {
       .catch(() => {
         // If both cache and network fail, show offline page for navigation requests
         if (event.request.destination === 'document') {
-          return caches.match('/index.html');
+          return caches.match('index.html');
         }
       })
   );

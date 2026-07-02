@@ -1,4 +1,4 @@
-const CACHE_NAME = 'teleorman-news-v1';
+const CACHE_NAME = 'teleorman-news-v3';
 const urlsToCache = [
   './',
   'index.html',
@@ -53,39 +53,34 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Network-first for the app shell (HTML) so updates show up immediately;
+  // fall back to cache only when offline.
+  if (event.request.destination === 'document') {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          return response;
+        })
+        .catch(() => caches.match(event.request).then((r) => r || caches.match('index.html')))
+    );
+    return;
+  }
+
+  // Cache-first for other same-origin assets.
   event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        // Return cached version or fetch from network
-        if (response) {
-          console.log('Service Worker: Serving from cache:', event.request.url);
+    caches.match(event.request).then((response) => {
+      if (response) return response;
+      return fetch(event.request).then((response) => {
+        if (!response || response.status !== 200 || response.type !== 'basic') {
           return response;
         }
-
-        console.log('Service Worker: Fetching from network:', event.request.url);
-        return fetch(event.request).then((response) => {
-          // Don't cache non-successful responses
-          if (!response || response.status !== 200 || response.type !== 'basic') {
-            return response;
-          }
-
-          // Clone the response
-          const responseToCache = response.clone();
-
-          caches.open(CACHE_NAME)
-            .then((cache) => {
-              cache.put(event.request, responseToCache);
-            });
-
-          return response;
-        });
-      })
-      .catch(() => {
-        // If both cache and network fail, show offline page for navigation requests
-        if (event.request.destination === 'document') {
-          return caches.match('index.html');
-        }
-      })
+        const responseToCache = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseToCache));
+        return response;
+      });
+    })
   );
 });
 

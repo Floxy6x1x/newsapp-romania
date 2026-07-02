@@ -389,8 +389,38 @@
             }
 
             async fetchSource(domain) {
-                const xml = await this.fetchText(`https://${domain}/feed/`);
+                const feed = `https://${domain}/feed/`;
+                // 1) rss2json — serviciu dedicat, gestionează CORS + parsarea (cel mai stabil)
+                try {
+                    const r = await fetch(`https://api.rss2json.com/v1/api.json?count=25&rss_url=${encodeURIComponent(feed)}`, { cache: 'no-store' });
+                    if (r.ok) {
+                        const j = await r.json();
+                        if (j.status === 'ok' && Array.isArray(j.items) && j.items.length) {
+                            return j.items.map(it => this.mapJson(it, domain));
+                        }
+                    }
+                } catch (e) { /* trecem pe proxy */ }
+                // 2) Rezervă: proxy CORS generic + parsare XML
+                const xml = await this.fetchText(feed);
                 return this.parseRss(xml, domain);
+            }
+
+            mapJson(it, domain) {
+                const srcName = domain.replace(/\.(ro|com|net|eu)$/, '');
+                let image = it.thumbnail || it.enclosure?.link || '';
+                if (!image && it.content) {
+                    const m = it.content.match(/<img[^>]+src=["']([^"']+)["']/i);
+                    if (m) image = m[1];
+                }
+                return {
+                    title: this.decode(it.title || ''),
+                    summary: this.stripHtml(it.description || it.content || '').slice(0, 200),
+                    link: (it.link || '').trim(),
+                    date: new Date(it.pubDate || Date.now()),
+                    image,
+                    source: srcName, domain,
+                    category: (it.categories && it.categories[0]) ? this.decode(it.categories[0]) : srcName
+                };
             }
 
             parseRss(xml, domain) {

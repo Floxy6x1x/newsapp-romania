@@ -191,9 +191,9 @@
         <div class="modal">
             <button class="modal-close" data-close>✕</button>
             <h2>🗞️ Surse monitorizate</h2>
-            <p class="hint">Adaugă domeniul fiecărui ziar din Teleorman pe care vrei să-l urmărești (ex. <code>teleormannews.ro</code>). Sursele care nu răspund apar cu ✗ — șterge-le.</p>
+            <p class="hint">Monitorizează presa din Teleorman prin Google News. Adaugă o <strong>localitate sau temă</strong> (ex. <code>Zimnicea</code>, <code>primăria Alexandria</code>) sau direct <strong>domeniul unui ziar</strong> (ex. <code>teleormannews.ro</code>). Sursele care nu răspund apar cu ✗.</p>
             <div class="row-add">
-                <input type="text" id="sourceInput" placeholder="ex. ziarulmara.ro" autocomplete="off">
+                <input type="text" id="sourceInput" placeholder="ex. Zimnicea  sau  teleormannews.ro" autocomplete="off">
                 <button id="addSource">Adaugă</button>
             </div>
             <div id="sourcesList"></div>
@@ -216,11 +216,11 @@
 
     <script>
         const DEFAULT_SOURCES = [
-            'teleormannews.ro',
-            'ziarulmara.ro',
-            'gazetadeteleorman.ro',
-            'teleormanonline.ro',
-            'observatoruldeteleorman.ro'
+            'Teleorman',
+            'Alexandria Teleorman',
+            'Roșiori de Vede',
+            'Turnu Măgurele',
+            'teleormannews.ro'
         ];
 
         class Monitor {
@@ -231,6 +231,12 @@
                     u => `https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(u)}`
                 ];
                 this.sources = this.load('tn_sources', DEFAULT_SOURCES);
+                // Migrare o singură dată la sursele noi (Google News) pentru utilizatorii vechi
+                if (!localStorage.getItem('tn_v2')) {
+                    this.sources = DEFAULT_SOURCES.slice();
+                    this.save('tn_sources', this.sources);
+                    try { localStorage.setItem('tn_v2', '1'); } catch (e) {}
+                }
                 this.keywords = this.load('tn_keywords', []);
                 this.read = new Set(this.load('tn_read', []));
                 this.theme = localStorage.getItem('tn_theme') || 'light';
@@ -299,9 +305,10 @@
             }
             addSource() {
                 const inp = document.getElementById('sourceInput');
-                const d = this.normDomain(inp.value);
-                if (!d || !d.includes('.')) { inp.focus(); return; }
-                if (!this.sources.includes(d)) { this.sources.push(d); this.save('tn_sources', this.sources); }
+                let v = inp.value.trim();
+                if (!v) { inp.focus(); return; }
+                if (this.isDomain(v)) v = this.normDomain(v);
+                if (!this.sources.includes(v)) { this.sources.push(v); this.save('tn_sources', this.sources); }
                 inp.value = ''; this.renderSources(); this.loadFeed(true);
             }
             removeSource(d) {
@@ -375,10 +382,15 @@
                     }
                 });
 
-                // dedup by link, sort newest first
-                const seen = new Set();
-                this.articles = all.filter(a => a.link && !seen.has(a.link) && seen.add(a.link))
-                    .sort((a, b) => b.date - a.date);
+                // dedup după link ȘI după titlu (Google News poate repeta articole între căutări)
+                const seenLink = new Set(), seenTitle = new Set();
+                this.articles = all.filter(a => {
+                    if (!a.link) return false;
+                    const tk = (a.title || '').toLowerCase().replace(/\s+/g, ' ').trim();
+                    if (seenLink.has(a.link) || (tk && seenTitle.has(tk))) return false;
+                    seenLink.add(a.link); if (tk) seenTitle.add(tk);
+                    return true;
+                }).sort((a, b) => b.date - a.date);
                 this.tagAlerts();
 
                 this.loading = false;
@@ -388,56 +400,81 @@
                 else { this.render(); this.setStatus(`✅ ${new Date().toLocaleTimeString('ro-RO')} · ${this.articles.length} știri din ${okCount}/${this.sources.length} surse`); }
             }
 
-            async fetchSource(domain) {
-                const feed = `https://${domain}/feed/`;
-                // 1) rss2json — serviciu dedicat, gestionează CORS + parsarea (cel mai stabil)
+            // O sursă e fie un domeniu de ziar (teleormannews.ro), fie o temă/localitate
+            // căutată prin Google News (Teleorman, Alexandria...).
+            isDomain(s) {
+                s = s.trim();
+                return /^[a-z0-9.-]+\.[a-z]{2,}$/i.test(s) && !/\s/.test(s);
+            }
+
+            feedUrlFor(src) {
+                if (this.isDomain(src)) return `https://${this.normDomain(src)}/feed/`;
+                return `https://news.google.com/rss/search?q=${encodeURIComponent(src)}&hl=ro&gl=RO&ceid=RO:ro`;
+            }
+
+            async fetchSource(src) {
+                src = src.trim();
+                const isDom = this.isDomain(src);
+                const feed = this.feedUrlFor(src);
+                const label = isDom ? this.normDomain(src).replace(/\.(ro|com|net|eu)$/, '') : src;
+                // 1) rss2json — gestionează CORS + parsarea (cel mai stabil, merge bine cu Google News)
                 try {
                     const r = await fetch(`https://api.rss2json.com/v1/api.json?count=25&rss_url=${encodeURIComponent(feed)}`, { cache: 'no-store' });
                     if (r.ok) {
                         const j = await r.json();
                         if (j.status === 'ok' && Array.isArray(j.items) && j.items.length) {
-                            return j.items.map(it => this.mapJson(it, domain));
+                            return j.items.map(it => this.mapJson(it, label, isDom));
                         }
                     }
                 } catch (e) { /* trecem pe proxy */ }
                 // 2) Rezervă: proxy CORS generic + parsare XML
                 const xml = await this.fetchText(feed);
-                return this.parseRss(xml, domain);
+                return this.parseRss(xml, label, isDom);
             }
 
-            mapJson(it, domain) {
-                const srcName = domain.replace(/\.(ro|com|net|eu)$/, '');
+            mapJson(it, label, isDom) {
                 let image = it.thumbnail || it.enclosure?.link || '';
                 if (!image && it.content) {
                     const m = it.content.match(/<img[^>]+src=["']([^"']+)["']/i);
                     if (m) image = m[1];
                 }
+                let title = this.decode(it.title || '');
+                let source = label;
+                if (!isDom) { // Google News pune sursa reală la final: "Titlu - Ziarul X"
+                    const i = title.lastIndexOf(' - ');
+                    if (i > 10) { source = title.slice(i + 3).trim(); title = title.slice(0, i).trim(); }
+                }
                 return {
-                    title: this.decode(it.title || ''),
+                    title,
                     summary: this.stripHtml(it.description || it.content || '').slice(0, 200),
                     link: (it.link || '').trim(),
                     date: new Date(it.pubDate || Date.now()),
-                    image,
-                    source: srcName, domain,
-                    category: (it.categories && it.categories[0]) ? this.decode(it.categories[0]) : srcName
+                    image, source, domain: label,
+                    category: source
                 };
             }
 
-            parseRss(xml, domain) {
+            parseRss(xml, label, isDom) {
                 const doc = new DOMParser().parseFromString(xml, 'text/xml');
-                const srcName = domain.replace(/\.(ro|com|net|eu)$/, '');
                 return Array.from(doc.querySelectorAll('item')).map(item => {
                     const get = t => item.querySelector(t)?.textContent || '';
                     const content = item.getElementsByTagName('content:encoded')[0]?.textContent || get('description');
                     const imgMatch = content.match(/<img[^>]+src=["']([^"']+)["']/i);
                     const media = item.getElementsByTagName('media:content')[0] || item.getElementsByTagName('enclosure')[0];
+                    let title = this.decode(get('title'));
+                    let source = label;
+                    if (!isDom) {
+                        const i = title.lastIndexOf(' - ');
+                        if (i > 10) { source = title.slice(i + 3).trim(); title = title.slice(0, i).trim(); }
+                        const s = get('source'); if (s) source = this.decode(s);
+                    }
                     return {
-                        title: this.decode(get('title')),
+                        title,
                         summary: this.stripHtml(get('description')).slice(0, 200),
                         link: get('link').trim(),
                         date: new Date(get('pubDate') || Date.now()),
                         image: imgMatch ? imgMatch[1] : (media?.getAttribute('url') || ''),
-                        source: srcName, domain
+                        source, domain: label, category: source
                     };
                 });
             }

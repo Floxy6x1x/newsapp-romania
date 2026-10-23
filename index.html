@@ -227,8 +227,10 @@
             constructor() {
                 this.proxies = [
                     u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
+                    u => `https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(u)}`,
                     u => `https://corsproxy.io/?url=${encodeURIComponent(u)}`,
-                    u => `https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(u)}`
+                    u => `https://thingproxy.freeboard.io/fetch/${u}`,
+                    u => `https://r.jina.ai/${u}`
                 ];
                 this.sources = this.load('tn_sources', DEFAULT_SOURCES);
                 // Migrare o singură dată la sursele noi (Google News) pentru utilizatorii vechi
@@ -417,19 +419,28 @@
                 const isDom = this.isDomain(src);
                 const feed = this.feedUrlFor(src);
                 const label = isDom ? this.normDomain(src).replace(/\.(ro|com|net|eu)$/, '') : src;
-                // 1) rss2json — gestionează CORS + parsarea (cel mai stabil, merge bine cu Google News)
-                try {
+
+                // Încearcă în PARALEL mai multe metode; prima care aduce articole câștigă.
+                const attempts = [];
+                // rss2json (serviciu dedicat RSS -> JSON)
+                attempts.push((async () => {
                     const r = await fetch(`https://api.rss2json.com/v1/api.json?count=25&rss_url=${encodeURIComponent(feed)}`, { cache: 'no-store' });
-                    if (r.ok) {
-                        const j = await r.json();
-                        if (j.status === 'ok' && Array.isArray(j.items) && j.items.length) {
-                            return j.items.map(it => this.mapJson(it, label, isDom));
-                        }
-                    }
-                } catch (e) { /* trecem pe proxy */ }
-                // 2) Rezervă: proxy CORS generic + parsare XML
-                const xml = await this.fetchText(feed);
-                return this.parseRss(xml, label, isDom);
+                    const j = await r.json();
+                    if (j.status === 'ok' && Array.isArray(j.items) && j.items.length) return j.items.map(it => this.mapJson(it, label, isDom));
+                    throw new Error('rss2json gol');
+                })());
+                // fiecare proxy CORS -> XML
+                for (const mk of this.proxies) {
+                    attempts.push((async () => {
+                        const r = await fetch(mk(feed), { cache: 'no-store' });
+                        if (!r.ok) throw new Error('HTTP ' + r.status);
+                        const t = await r.text();
+                        const arts = this.parseRss(t, label, isDom);
+                        if (arts.length) return arts;
+                        throw new Error('parse gol');
+                    })());
+                }
+                return await Promise.any(attempts);
             }
 
             mapJson(it, label, isDom) {
@@ -618,7 +629,10 @@
 
         let app;
         document.addEventListener('DOMContentLoaded', () => { app = new Monitor(); });
-        if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+        // Curăță orice service worker vechi care ar putea servi o versiune învechită din cache.
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations?.().then(rs => rs.forEach(r => r.unregister())).catch(() => {});
+        }
     </script>
 </body>
 </html>

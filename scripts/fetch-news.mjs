@@ -1,31 +1,42 @@
 // Rulează pe serverele GitHub (GitHub Actions), nu în browser.
-// Aduce știri din presa locală Teleorman (feed-uri directe) + Google News,
-// și scrie news.json, pe care aplicația îl citește same-origin (fără proxy).
+// Aduce DOAR presa locală din Teleorman: feed-uri RSS directe + sursele
+// locale găsite prin Google News. Scrie news.json (citit same-origin de app).
 
 import { writeFileSync } from 'node:fs';
 
-// Ziarele locale din Teleorman — feed RSS direct (server-side, fără blocaje).
+// Ziarele locale din Teleorman cu feed RSS direct (cele confirmate / probabile).
 const SITES = [
-  { name: 'Teleorman News', url: 'https://teleormannews.ro/feed/' },
-  { name: 'Ziarul Mara', url: 'https://ziarulmara.ro/feed/' },
   { name: 'Liber în Teleorman', url: 'https://liberinteleorman.ro/feed/' },
-  { name: 'Gazeta de Teleorman', url: 'https://gazetadeteleorman.ro/feed/' },
-  { name: 'Teleorman Online', url: 'https://teleormanonline.ro/feed/' },
-  { name: 'Observatorul de Teleorman', url: 'https://observatoruldeteleorman.ro/feed/' },
-  { name: 'Ziarul Teleorman', url: 'https://ziarulteleorman.ro/feed/' },
-  { name: '24NewsRo', url: 'https://24newsro.ro/feed/' }
+  { name: 'Ziarul Teleormanul', url: 'https://ziarulteleormanul.ro/feed/' },
+  { name: 'ImpactNews24', url: 'https://impactnews24.ro/feed/' },
+  { name: 'Total Impact', url: 'https://totalimpact.ro/feed/' },
+  { name: 'Exploziv News 24', url: 'https://explozivnews24.ro/feed/' },
+  { name: 'Incomod Media', url: 'https://incomod-media.ro/feed/' },
+  { name: 'Teleorman News', url: 'https://teleormannews.ro/feed/' }
 ];
 
-// Completare prin Google News (prinde și ce nu are feed propriu).
+// Domeniile considerate „presă locală Teleorman" — folosite ca filtru pentru
+// rezultatele Google News (restul, naționale, sunt eliminate ca zgomot).
+const LOCAL = [
+  'liberinteleorman.ro', 'ziarulteleormanul.ro', 'impactnews24.ro', 'totalimpact.ro',
+  'explozivnews24.ro', 'incomod-media.ro', 'teleormannews.ro', '24newsro.ro',
+  'ziarulmara.ro', 'gazetadeteleorman.ro', 'teleormanonline.ro', 'observatoruldeteleorman.ro',
+  'ziarulteleorman.ro', 'teleorman'
+];
+
 const QUERIES = ['Teleorman', 'Alexandria Teleorman', 'Roșiori de Vede', 'Turnu Măgurele', 'Zimnicea', 'Videle'];
 
-const CAP_PER_SOURCE = 12; // ca o singură sursă să nu domine
+const CAP_PER_SOURCE = 15;
 const TOTAL = 90;
 
 function gnewsUrl(q) {
-  return `https://news.google.com/rss/search?q=${encodeURIComponent(q + ' when:14d')}&hl=ro&gl=RO&ceid=RO:ro`;
+  return `https://news.google.com/rss/search?q=${encodeURIComponent(q + ' when:21d')}&hl=ro&gl=RO&ceid=RO:ro`;
 }
-
+function isLocal(domain) {
+  if (!domain) return false;
+  const d = domain.replace(/^https?:\/\//, '').replace(/^www\./, '').toLowerCase();
+  return LOCAL.some((x) => d.includes(x));
+}
 function decode(s = '') {
   return s
     .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
@@ -70,8 +81,7 @@ function parseItems(xml, forcedSource) {
         title, link,
         date: pub ? new Date(pub).toISOString() : new Date().toISOString(),
         summary: desc.slice(0, 220),
-        source: source || 'Presă',
-        image, srcDomain, local: !!forcedSource
+        source: source || 'Presă', image, srcDomain, local: !!forcedSource
       });
     }
   }
@@ -83,41 +93,33 @@ async function fetchXml(url) {
   if (!r.ok) throw new Error('HTTP ' + r.status);
   return r.text();
 }
-
 async function fetchSite(s) {
-  try {
-    const items = parseItems(await fetchXml(s.url), s.name);
-    console.log(`  [local] ${s.name}: ${items.length}`);
-    return items;
-  } catch (e) { console.error(`  [local] ${s.name}: EȘEC — ${e.message}`); return []; }
+  try { const items = parseItems(await fetchXml(s.url), s.name); console.log(`  [local] ${s.name}: ${items.length}`); return items; }
+  catch (e) { console.error(`  [local] ${s.name}: EȘEC — ${e.message}`); return []; }
 }
-
 async function fetchQuery(q) {
-  try {
-    const items = parseItems(await fetchXml(gnewsUrl(q)), null);
-    console.log(`  [google] ${q}: ${items.length}`);
-    return items;
-  } catch (e) { console.error(`  [google] ${q}: EȘEC — ${e.message}`); return []; }
+  try { const items = parseItems(await fetchXml(gnewsUrl(q)), null); console.log(`  [google] ${q}: ${items.length}`); return items; }
+  catch (e) { console.error(`  [google] ${q}: EȘEC — ${e.message}`); return []; }
 }
 
 const all = [];
 for (const s of SITES) all.push(...await fetchSite(s));
 for (const q of QUERIES) all.push(...await fetchQuery(q));
 
-// log domenii Google News (ca să descoperim ce ziare locale mai există)
-const domains = [...new Set(all.filter(a => a.srcDomain).map(a => a.srcDomain))];
-console.log('Domenii surse Google News:', domains.join(', '));
+// Păstrează doar presa locală: feed direct SAU sursă Google dintr-un domeniu local.
+const local = all.filter((a) => a.local || isLocal(a.srcDomain));
+console.log(`Articole locale: ${local.length} din ${all.length} totale.`);
 
-// dedup după titlu normalizat, local înaintea Google la titluri identice
+// dedup după titlu, preferă feed-ul direct
 const seen = new Map();
-for (const a of all) {
+for (const a of local) {
   const k = a.title.toLowerCase().replace(/\s+/g, ' ').trim();
   if (!k) continue;
   if (!seen.has(k) || (a.local && !seen.get(k).local)) seen.set(k, a);
 }
-let deduped = [...seen.values()].sort((a, b) => new Date(b.date) - new Date(a.date));
+const deduped = [...seen.values()].sort((a, b) => new Date(b.date) - new Date(a.date));
 
-// cap per sursă ca să fie echilibrat
+// echilibrare: maxim CAP_PER_SOURCE per sursă
 const per = {};
 const articles = [];
 for (const a of deduped) {
@@ -129,4 +131,4 @@ for (const a of deduped) {
 }
 
 writeFileSync('news.json', JSON.stringify({ updated: new Date().toISOString(), count: articles.length, articles }, null, 1));
-console.log(`Scris news.json cu ${articles.length} articole din ${Object.keys(per).length} surse.`);
+console.log(`Scris news.json cu ${articles.length} articole din ${Object.keys(per).length} surse locale.`);

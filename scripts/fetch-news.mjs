@@ -11,7 +11,6 @@ const SITES = [
   { name: 'ImpactNews24', url: 'https://impactnews24.ro/feed/' },
   { name: 'Total Impact', url: 'https://totalimpact.ro/feed/' },
   { name: 'Exploziv News 24', url: 'https://explozivnews24.ro/feed/' },
-  { name: 'Incomod Media', url: 'https://incomod-media.ro/feed/' },
   { name: 'Teleorman News', url: 'https://teleormannews.ro/feed/' }
 ];
 
@@ -19,7 +18,7 @@ const SITES = [
 // rezultatele Google News (restul, naționale, sunt eliminate ca zgomot).
 const LOCAL = [
   'liberinteleorman.ro', 'ziarulteleormanul.ro', 'impactnews24.ro', 'totalimpact.ro',
-  'explozivnews24.ro', 'incomod-media.ro', 'teleormannews.ro', '24newsro.ro',
+  'explozivnews24.ro', 'teleormannews.ro', '24newsro.ro',
   'ziarulmara.ro', 'gazetadeteleorman.ro', 'teleormanonline.ro', 'observatoruldeteleorman.ro',
   'ziarulteleorman.ro', 'teleorman'
 ];

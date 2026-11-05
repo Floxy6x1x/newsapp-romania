@@ -23,11 +23,14 @@ NAVY, RED = (14, 26, 48), (135, 25, 42)
 
 
 def build(a):
-    im = Image.open(a.photo).convert('RGB')
-    s = W / im.width
-    ph = im.resize((W, round(im.height * s)), Image.LANCZOS)
-    base = Image.new('RGB', (W, H), RED)
-    base.paste(ph.crop((0, a.top, W, min(ph.height, a.top + H))), (0, 0))
+    if a.photo:
+        im = Image.open(a.photo).convert('RGB')
+        s = W / im.width
+        ph = im.resize((W, round(im.height * s)), Image.LANCZOS)
+        base = Image.new('RGB', (W, H), RED)
+        base.paste(ph.crop((0, a.top, W, min(ph.height, a.top + H))), (0, 0))
+    else:
+        base = Image.new('RGB', (W, H), NAVY)
     ov = Image.new('RGBA', (W, H))
     px = ov.load()
     for y in range(H):
@@ -57,6 +60,8 @@ def build(a):
         return L
 
     x, tw = 80, 920
+    if a.kicker:
+        d.text((x, a.text_y - 62), a.kicker, font=f('Inter-ExtraBold.otf', 32), fill=(235, 60, 70))
     hf = f('Inter-ExtraBold.otf', a.size)
     y = a.text_y
     for l in wrap(a.headline, hf, tw):
@@ -82,7 +87,8 @@ def build(a):
 
 if __name__ == '__main__':
     p = argparse.ArgumentParser()
-    p.add_argument('--photo', required=True)
+    p.add_argument('--photo', default='', help='fara poza: fundal doar cu degrade')
+    p.add_argument('--kicker', default='', help='eticheta rosie deasupra titlului')
     p.add_argument('--headline', required=True)
     p.add_argument('--name', required=True)
     p.add_argument('--role', default='')
